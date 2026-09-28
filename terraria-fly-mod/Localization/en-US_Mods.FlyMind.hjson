@@ -1,0 +1,21 @@
+{
+	Mods: {
+		FlyMind: {
+			Items: {
+				FlyFood: {
+					DisplayName: Fly Food
+					Tooltip:
+						'''
+						 Left click: eat it. Nothing will happen.
+						 Right click: put it down. The flies will smell it.
+						'''
+				}
+			}
+			NPCs: {
+				Fly: {
+					DisplayName: Fruit Fly
+				}
+			}
+		}
+	}
+}
