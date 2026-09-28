@@ -1,0 +1,32 @@
+ 669|                                              offsets_buf, 0)
+ 670|                 raw = [data_buf[offsets[i]:offsets[i + 1]] for i in range(n)]
+ 671|                 if t in (T_UTF8, T_LARGE_UTF8):
+ 672|                     return [v.decode("utf-8", "replace") for v in raw]
+ 673|                 return raw
+ 674|             if t in (T_LIST, T_LARGE_LIST):
+ 675|                 wide = t == T_LARGE_LIST
+ 676|                 # A list column contributes *two* buffers of its own -- validity then
+ 677|                 # offsets -- and the child's buffers follow after them.  Skipping the
+ 678|                 # validity bitmap here desynchronises every later column and reads the
+ 679|                 # child's data buffer as if it were the offsets.
+ 680|                 take_buffer()          # validity bitmap
+ 681|                 offsets_buf = take_buffer()
+ 682|                 if len(offsets_buf) < struct.calcsize("<%d%s" % (n + 1, "q" if wide else "i")):
+ 683|                     # fall back to whichever offset width the buffer actually holds
+ 684|                     if len(offsets_buf) >= 8 * (n + 1):
+ 685|                         wide = True
+ 686|                     elif len(offsets_buf) >= 4 * (n + 1):
+ 687|                         wide = False
+ 688|                 fmt = "<%d%s" % (n + 1, "q" if wide else "i")
+ 689|                 offsets = struct.unpack_from(fmt, offsets_buf, 0)
+ 690|                 child = field.children[0] if field.children else None
+ 691|                 if child is None:
+ 692|                     # consume the child's node + buffers so later fields stay aligned
+ 693|                     node_i[0] += 1
+ 694|                     take_buffer()
+ 695|                     take_buffer()
+ 696|                     return [[] for _ in range(n)]
+ 697|                 # the child column has its own FieldNode: its length is the element count
+ 698|                 child_vals = _decode_values(child, nodes[node_i[0]])
+ 699|                 node_i[0] += 1
+ 700|                 take_buffer()          # child validity bitmap
