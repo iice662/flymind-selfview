@@ -1,0 +1,21 @@
+# EXACT COMMANDS (working directory in brackets)
+# Blob used by every run below: D:\projects\science\flymind.brain
+#   FLYMIND4, 12000 neurons, 1615753 synapses, 540052 inhibitory
+#   SHA256 E6829B5184A082AE25A7AE704A36D0F065010EFFC6E4F4886EA877A5836E0C8A
+
+# [D:\projects\science\tools\CircuitBuilder]
+dotnet run -- ..\..\malecns\edges.bin ..\..\malecns\annotations.tsv ..\..\flymind.brain 12000 1 ..\..\malecns\transmitters.tsv
+
+# [D:\projects\science\tools\CircuitPreview]
+dotnet run -- ..\..\flymind.brain --sweep 100 200 300 500 1000 --secs 2 --odor 0.05
+dotnet run -- ..\..\flymind.brain --pp
+dotnet run -- ..\..\flymind.brain --asym --kappa 300 --secs 5 --yaw 0.6
+dotnet run -- ..\..\flymind.brain --asym --kappa 300 --secs 5 --yaw 0.6 --patch
+dotnet run -- ..\..\flymind.brain --exp --kappa 300 --trials 10 --secs 3 --odor 0.05 --csv ..\..\results\raw\A-flow
+dotnet run -- ..\..\flymind.brain --exp --heading --kappa 300 --trials 10 --secs 6 --odor 0.05 --csv ..\..\results\raw\B-heading
+
+# [D:\projects\science\tools\CircuitSchematic]
+dotnet run -- ..\..\flymind.brain ..\..\malecns\annotations.tsv ..\..\circuit-schematic.md
+
+# [D:\projects\science\tools\PathProbe]  (full connectome, 151856684 edges)
+dotnet run -- ..\..\malecns\edges.bin ..\..\malecns\annotations.tsv
