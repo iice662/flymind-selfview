@@ -1,0 +1,31 @@
+# ---- large release data (re-downloadable; see README "Data") ------------------
+malecns/*.feather
+malecns/edges.bin
+malecns/*.tsv
+downloads/
+pdf/
+
+# ---- build output ------------------------------------------------------------
+**/obj/
+**/bin/
+tools/__pycache__/
+*.tmod
+
+# ---- scratch -----------------------------------------------------------------
+results/raw/_*
+*.log
+
+# ---- editor / OS -------------------------------------------------------------
+.vs/
+.idea/
+.vscode/
+Thumbs.db
+desktop.ini
+
+# not redistributed: duplicate/pre-fix blobs and third-party annotations
+malecns/*.brain
+terraria-fly-mod/Assets/flymind.brain
+flywire-annotations/
+
+# portable snapshot, regenerate with: git bundle create flymind-selfview.bundle --all
+*.bundle
