@@ -1,0 +1,34 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    FlyMind - a Terraria tModLoader mod (1.4.4 / 2026.07 branch).
+
+    Build requirements: .NET 8 SDK. Verify the tModLoader install path below before
+    building; TerraSteamPath is what tMLMod.targets uses to find tModLoader.dll.
+
+    That .targets file is imported from the tModLoader install directory, so a normal
+    `dotnet build` also packs the .tmod via `tModLoader.dll -build`.
+  -->
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <AssemblyName>FlyMind</AssemblyName>
+    <RootNamespace>FlyMind</RootNamespace>
+    <LangVersion>12.0</LangVersion>
+    <Nullable>disable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <EnableDefaultCompileItems>true</EnableDefaultCompileItems>
+    <TerrariaSteamPath>D:\Steam\steamapps\common\tModLoader\</TerrariaSteamPath>
+    <tMLSteamPath>D:\Steam\steamapps\common\tModLoader\</tMLSteamPath>
+  </PropertyGroup>
+
+  <Import Project="D:\Steam\steamapps\common\tModLoader\tMLMod.targets" />
+
+  <!-- The exported circuit blob ships next to the mod's assets. It is produced by
+       tools/build_circuit.py and is *not* compiled into the assembly. -->
+  <ItemGroup>
+    <None Include="Assets\flymind.brain" CopyToOutputDirectory="PreserveNewest" Condition="Exists('Assets\flymind.brain')" />
+  </ItemGroup>
+
+</Project>
