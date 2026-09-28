@@ -1,0 +1,13 @@
+displayName = FlyMind
+author = hadis + DeepSeek
+version = 0.1
+side = Both
+buildIgnore = *.md, *.ps1, bin/*, obj/*, .vs/*, .git/*
+
+# FlyMind: fruit flies in Terraria driven by a real Drosophila brain model
+#   connectome : MaleCNS v1.0 flat connectome (male CNS, brain + VNC),
+#                151,856,684 edges / 211,577 annotated bodies
+#   dynamics   : Shiu et al. 2024 (Nature 634:210) leaky integrate-and-fire model
+#   cell types : MaleCNS body annotations (type / hemibrainType), cross-walked with
+#                the FlyWire nomenclature (codex.flywire.ai)
+#   circuit    : 12,000 neurons / 1,615,753 synapses, built by tools/CircuitBuilder
