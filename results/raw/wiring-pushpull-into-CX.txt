@@ -1,0 +1,21 @@
+command: dotnet run -- ..\..\flymind.brain --pp
+(kappa applied: weights x300; no simulation, this is a count of synapses in the blob)
+
+   axis x: 2-means separation 0.814 (split at 365.9)
+   axis y: 2-means separation 0.561 (split at 179.2)
+   axis z: 2-means separation 0.587 (split at 194.8)
+   -> left-right axis = x at 365.9; visual pool splits 1508 / 1384
+
+CX cells: 2074;  receiving >=3 synapses from BOTH sides: 1417 (68%)
+  of those: push-pull (opposite net sign) 274 (19%), same sign excitatory 995, same sign inhibitory 15
+  mean |net drive| summed over the two sides: 11.8 synapses
+ring EPG/PEG cells: 68; both sides 60; push-pull 43 (72%)
+
+(push-pull fraction near 0 => the two sides sum instead of opposing, so only |rotation| can reach the CX, whatever the experiment does)
+
+definitions:
+  side            = soma coordinate on the left-right axis vs the midline (x = 365.9)
+  net_j(side)     = (excitatory synapses onto cell j from that side) - (inhibitory ones)
+  push-pull       = net on side A and net on side B have opposite sign
+  sign of a synapse = transmitter prediction of the presynaptic cell
+                      (GABA / glutamate / histamine = inhibitory)
