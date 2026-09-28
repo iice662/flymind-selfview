@@ -1,0 +1,212 @@
+
+########## SUGAR : 0 distinct labels, 0 neurons ##########
+
+########## BITTER : 0 distinct labels, 0 neurons ##########
+
+########## ODOR : 2 distinct labels, 2 neurons ##########
+     1  ORN_VA7m | ORN_VA7m | olfactory
+     1  ORN_V | ORN_V | olfactory
+
+########## DAN : 32 distinct labels, 60 neurons ##########
+     6  PAM06 | PAM06 | 92324 | DAN
+     6  PAM05 | PAM05 | 92324 | DAN
+     5  PAM01 | PAM01 | 74856 | DAN
+     4  PAM12 | PAM12 | 55210 | DAN
+     3  PAM02 | PAM02 | 63391 | DAN
+     3  PAM07 | PAM07 | 39617 | DAN
+     2  PAM11 | PAM11 | 114661 | DAN
+     2  PAM14 | PAM14 | 115868 | DAN
+     2  PAM04 | PAM04 | 108429 | DAN
+     2  PAM02 | PAM02 | 107986 | DAN
+     2  PAM14 | PAM14 | 103433 | DAN
+     2  PAM08 | PAM08 | 47196 | DAN
+     2  PPL108 | PPL108 | DAN
+     1  PAM04 | PAM04 | 37845 | DAN
+     1  PAM10 | PAM10 | 36624 | DAN
+     1  PPL107 | PPL107 | DAN
+     1  PPL204 | PPL204 | DAN
+     1  PAM01 | PAM01 | 63391 | DAN
+     1  PAM04 | PAM04 | 144678 | DAN
+     1  PAM07 | PAM07 | 47196 | DAN
+     1  PPL105 | PPL105 | DAN
+     1  PAM03 | PAM03 | 168080 | DAN
+     1  PAM12 | PAM12 | 61360 | DAN
+     1  PAL01 | PAL01
+     1  PAM10 | PAM10 | 28434 | DAN
+     1  PAM13 | PAM13 | 115868 | DAN
+     1  PAM09 | PAM09 | 28434 | DAN
+     1  PAM08 | PAM08 | 55210 | DAN
+     1  PAM08 | PAM08 | 49043 | DAN
+     1  PPL103 | PPL103 | DAN
+     1  PAM08 | PAM08 | 61360 | DAN
+     1  PPL202 | PPL202 | DAN
+
+########## MBON : 19 distinct labels, 26 neurons ##########
+     5  MBON10 | MBON10 | 27954 | MBON
+     2  MBON02 | MBON02 | MBON
+     2  MBON32 | MBON32 | MBON
+     2  MBON12 | MBON12 | 13728 | MBON
+     1  MBON01 | MBON01 | MBON
+     1  MBON30 | MBON30 | MBON
+     1  MBON06 | MBON06 | MBON
+     1  MBON05 | MBON05 | MBON
+     1  MBON20 | MBON20 | MBON
+     1  MBON17-like | MBON17-like | 11777 | MBON
+     1  MBON33 | MBON33 | MBON
+     1  MBON23 | MBON23 | 20835 | MBON
+     1  MBON29 | MBON29 | 22870 | MBON
+     1  MBON14 | MBON14 | 10267 | MBON
+     1  MBON15-like | MBON15-like | 11777 | MBON
+     1  MBON28 | MBON28 | 11777 | MBON
+     1  MBON31 | MBON31 | MBON
+     1  MBON35 | MBON35 | MBON
+     1  MBON17 | MBON17 | 11777 | MBON
+
+########## KC : 9 distinct labels, 991 neurons ##########
+   398  KCg-m | KCg-m | 14292 | Kenyon_Cell | KCg
+   132  KCab | KCab-m | 11862 | Kenyon_Cell | KCab
+   126  KCab | KCab-s | 11862 | Kenyon_Cell | KCab
+    72  KCapbp-m | KCa'b'-m | 17488 | Kenyon_Cell
+    68  KCapbp-ap2 | KCa'b'-ap2 | 17488 | Kenyon_Cell
+    66  KCapbp-ap1 | KCa'b'-ap1 | 17488 | Kenyon_Cell
+    56  KCab | KCab-c | 11862 | Kenyon_Cell | KCab
+    54  KCg-d | KCg-d | 19102 | Kenyon_Cell | KCg
+    19  KCab-p | KCab-p | 11862 | Kenyon_Cell
+
+########## MOTOR_PROBOSCIS : 14 distinct labels, 18 neurons ##########
+     3  CEM | brain_motor_neuron | crop_motor_neuron
+     2  CB0701 | brain_motor_neuron | ingestion_motor_neuron
+     2  CB0708 | brain_motor_neuron | ingestion_motor_neuron
+     1  MNx03 | brain_motor_neuron | ingestion_motor_neuron
+     1  CB0700 | brain_motor_neuron | ingestion_motor_neuron
+     1  CB0703 | brain_motor_neuron | ingestion_motor_neuron
+     1  CB0715 | brain_motor_neuron | ingestion_motor_neuron
+     1  CB0720 | brain_motor_neuron | proboscis_motor_neuron
+     1  CB0728 | brain_motor_neuron | ingestion_motor_neuron
+     1  CB0762 | brain_motor_neuron | proboscis_motor_neuron
+     1  CB0764 | brain_motor_neuron | crop_motor_neuron
+     1  MN10 | brain_motor_neuron | ingestion_motor_neuron
+     1  CB0769 | brain_motor_neuron | ingestion_motor_neuron
+     1  CB0783 | brain_motor_neuron | proboscis_motor_neuron
+
+########## DESCENDING : 210 distinct labels, 271 neurons ##########
+     5  DNge091 | 14801
+     4  DNge094 | 20185
+     4  DNg12_a | 13492
+     4  DNg06 | 15065
+     3  DNpe009 | PS226 | 18072
+     3  DNge085 | 14409
+     3  DNge019 | 13492
+     3  DNg28
+     3  DNg72 | 14554
+     3  DNge113 | 12687
+     3  DNpe054 | DNp16/17 | 21027
+     2  DNg80 | 10548
+     2  DNge011
+     2  DNg92_a | 21122
+     2  DNg36_b | 19691
+     2  DNp30 | DSKMP1A
+     2  DNae003 | PS040 | 11314
+     2  DNg12_e | 13492
+     2  DNg07 | 14801
+     2  DNa02 | DNa02 | 10360
+     2  DNg74_b | 10124
+     2  DNge134
+     2  DNge122 | 12601
+     2  DNge084
+     2  DNge071 | 14409
+     2  DNge130 | 199352
+     2  DNg70 | 10967
+     2  DNg10 | 14409
+     2  DNg56 | 10033
+     2  DNp60 | CL139 | 12325
+     2  DNbe003 | hb5813024933
+     2  DNg08_a | 19573
+     2  DNg12_b | 13492
+     2  DNp28 | DNp28 | ocellar
+     2  DNp09 | DNp09 | 10783
+     2  DNpe043 | CL207 | 11251
+     2  DNd05 | CL124
+     2  DNae005 | VES009 | 10360
+     2  DNge081
+     2  DNge128
+     2  DNpe014 | PS294,PS295,PS298
+     2  DNpe047 | SMP478 | 10578
+     2  DNpe008 | PS225 | 21027
+     2  DNb04 | DNb04
+     2  DNg04 | 14569
+     1  DNpe053 | SMP454
+     1  DNp53 | PS169
+     1  DNge104 | 12601
+     1  DNg68 | 12210
+     1  DNg33 | 13317
+     1  DNg89 | 11211
+     1  DNg26
+     1  DNpe027 | PS166
+     1  DNg02_a | 17331
+     1  DNg102
+     1  DNg82 | 14569
+     1  DNg75 | hb1874217622
+     1  DNge015 | 20923
+     1  DNge145 | 12687
+     1  DNge111 | 14801
+     1  DNg51 | 13444
+     1  DNge068
+     1  DNg29 | 10536
+     1  DNge061
+     1  DNg48 | 10506
+     1  DNge105 | 11183
+     1  DNge025 | 12393
+     1  DNpe040 | CL320
+     1  DNg64 | 10582
+     1  DNge136 | 10394
+     1  DNg97 | 13805
+     1  DNg15
+     1  DNg98 | 10394
+     1  DNa06 | PS039 | 10360
+     1  DNp41 | PS294,PS295,PS298
+     1  DNpe038 | SLP410 | 720575940609719250
+     1  DNpe044 | SMP479 | 10578
+     1  DNge034 | 11183
+     1  DNge020 | 13492
+     1  DNg02_a | 21122
+     1  DNge001 | 12393
+     1  DNp18 | DNp18
+     1  DN1a | DN1a
+     1  DNp46 | CL206 | 11251
+     1  DNae002 | DNa04 | 10543
+     1  DNp49 | DNp49 | 11204
+     1  DNp71 | DNp09 | 10783
+     1  DNg03 | 17331
+     1  DNg36_a | 19691
+     1  DNge044
+     1  DNg85 | 12188
+     1  DNge087 | 14409
+     1  DNg49
+     1  DNge006 | 10668
+     1  DNae001 | DNa01 | 10360
+     1  DN1-l | aMe23
+     1  DNde005 | VES028
+     1  DNp34 | DNp34
+     1  DNpe003 | VES069,VES081
+     1  DNc02 | SIFa
+     1  DNge047
+     1  DNg104
+     1  DNg16 | 10177
+     1  DNge007 | 12378
+     1  DNge148
+     1  DNg73
+     1  DNg14
+     1  DNg83 | 12601
+     1  DNg31 | 11411
+     1  DNp10 | DNp10
+     1  DNg08_b | 19573
+     1  DNge147 | 11183
+     1  DNge141 | 11103
+     1  DNde003 | LAL106
+     1  DNpe039 | CL306 | 513643
+     1  DNg87 | 12169
+     1  DNbe005 | PS069
+     1  DNg03 | 18556
+     1  DNp32 | DNp32
+     1  DNpe024 | CL325 | 33335
