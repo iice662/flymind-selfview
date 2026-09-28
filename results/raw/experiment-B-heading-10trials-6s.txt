@@ -1,0 +1,33 @@
+command: dotnet run -- ..\..\flymind.brain --exp --heading --kappa 300 --trials 10 --secs 6 --odor 0.05
+NOTE: this capture is the tail of a run whose stdout was piped through Select-String, so the
+per-arm header line and some rows are missing.  A complete unfiltered run with CSV output is
+being written to results\raw\B-heading.stdout.txt / B-heading-trials.csv / B-heading-summary.csv.
+
+kappa (connectome gain, calibrated) = 300
+circuit: 12000 neurons, 1615753 synapses, CX readout 2074 (ring=68 columnar=1036 fanbody=601 other=369)
+drive model: yaw push-pull - the fly turns, rotation-sensitive cells report the turn
+visual pool 2892 cells = self-motion 1770 + CX relay 1122; body patch 723 cells (25%)
+
+   body patch (compact)               723 cells,   30919 synapses into the CX (1354 into the heading ring), = 9.1% of all CX input
+   control patch (same size, random)   723 cells,   13053 synapses into the CX (412 into the heading ring), = 3.8% of all CX input
+   control patch (CX-input matched)  2169 cells,   17396 synapses into the CX (306 into the heading ring), = 5.1% of all CX input
+
+=== 结果 (10 trials/arm, 6 s/生物时间 per trial, 分析后半段) ===
+
+arm         pool-Hz  inj/step |  CX-Hz  active  corr   tau(ms)  dim   bumpR  PC12   loop  lagYaw  lagHead
+rest           21.5    0.00 |   0.25   0.014 -0.000       33 25.49  0.000  0.000  1.000       0        0
+flow           50.6   58.55 |   4.05   0.220  0.003      257 51.16  0.310  0.412  0.112     -53     -125
+self           50.2   58.23 |   3.31   0.175  0.003      186 53.42  0.348  0.418  0.172     -84     -155
+shuffle        50.3   58.37 |   4.14   0.222  0.004      240 53.53  0.293  0.400  0.099     -55     -127
+randmat        43.4   42.59 |   4.65   0.221  0.003      149 57.16  0.278  0.404  0.066     -58     -130
+decorr         48.1   52.13 |   3.13   0.168  0.002      140 54.01  0.376  0.440  0.180     -95     -166
+
+=== 关键对比: self(看见自己) vs 各对照 (效应量 d, 置换检验 p, 两侧) ===
+metric                      self      flow   shuffle   randmat    decorr |  d(flow) p(flow)  d(shuf) p(shuf)  d(rndm) p(rndm)  d(dec)  p(dec)
+ring 状态 PC1+2 方差           0.418    0.412    0.400    0.404    0.440 |   0.25  0.5956    0.60  0.1895    0.50  0.2714   -0.71  0.1190
+ring 轨迹环绕度                 0.172    0.112    0.099    0.066    0.180 |   2.26  0.0002    2.04  0.0005    3.72  0.0002   -0.30  0.4846
+ring 相位滞后(对yaw)°         -83.992  -52.999  -55.164  -58.014  -94.744 |  -2.42  0.0002   -1.91  0.0002   -1.74  0.0010    0.51  0.2802
+ring 相位滞后(对积分朝向)°       -155.423 -124.682 -127.264 -129.982 -166.442 |  -2.38  0.0002   -1.84  0.0005   -1.72  0.0010    0.52  0.2677
+CX yaw 调制幅度 (Hz)           1.380    1.989    1.893    1.850    1.079 |  -5.78  0.0002   -5.22  0.0002   -4.37  0.0002    2.02  0.0010
+CX 调谐↔推挽接线 r               0.216    0.320    0.298    0.257    0.215 | -14.51  0.0002   -8.35  0.0002   -5.03  0.0002    0.12  0.7973
+ring 调谐↔推挽接线 r             0.014    0.026    0.032    0.027    0.010 |  -0.55  0.2419   -0.84  0.0770   -0.69  0.1372    0.13  0.7686
