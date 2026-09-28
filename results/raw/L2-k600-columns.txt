@@ -1,0 +1,24 @@
+columns of L2-k600-compare.csv
+  metric, arm, n, mean, sd, sem, ci95_lo, ci95_hi (CI of the mean, Student t),
+  min, q1, median, q3, max, n_excluded_nonfinite (NaN/inf dropped, never imputed)
+
+columns of L2-k600-pairs.csv  (unpaired: each trial is an independent RNG seed)
+  metric, arm_a, arm_b, n_per_arm
+  mean_a, mean_b, diff_a_minus_b = mean_a - mean_b
+  diff_ci95_lo/hi  Welch CI of the difference, t quantile at df_welch
+  ratio_a_over_b   mean_a / mean_b
+  cohens_d         (mean_a - mean_b) / pooled sd (sample sd, n-1)
+  d_ci95_lo/hi     Hedges & Olkin standard-error approximation
+  hedges_g         d * (1 - 3/(4*(na+nb)-9))
+  welch_t, welch_df, p_welch_two_sided   Welch t test, two-sided
+  p_holm_self_family  Holm-Bonferroni over the three self-vs-control contrasts of
+                      that metric (self/flow, self/shuffle, self/decorr); blank for
+                      pairs outside that family
+  mannwhitney_U    U from arm_a ranks, tie-corrected average ranks
+  mw_z             normal approximation with continuity correction
+  p_mannwhitney_two_sided
+  rank_biserial    = 1 - 2U/(n_a*n_b); +1 = every arm_a value below every arm_b
+                     value, -1 = every arm_a value above every arm_b value
+  p_perm_two_sided permutation test, 4000 relabellings, seed 12345; only computed
+                     for pairs involving 'self'; resolution limit 1/4001 = 0.0002499
+  (blank field = not computed, e.g. permutation p outside the self family)
