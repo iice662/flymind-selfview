@@ -1,0 +1,36 @@
+command: dotnet run -- ..\..\flymind.brain --asym --kappa 300 --secs 5 --yaw 0.6
+(natural condition: no body patch; 5 s of steady +0.6 yaw, then 5 s of steady -0.6 yaw;
+ analysis window = second half of each; kappa = 300)
+
+   axis x: 2-means separation 0.814 (split at 365.9)
+   axis y: 2-means separation 0.561 (split at 179.2)
+   axis z: 2-means separation 0.587 (split at 194.8)
+   -> left-right axis = x at 365.9; visual pool splits 1508 / 1384
+
+circuit 12000 neurons; visual pool 2892; patch off (natural); |yaw| = 0.6, 5 s per direction
+
+readout                       D(right)   D(left)   index   corr(dr,w)
+CX (push-pull projection)      71322.8   25305.2    0.476      0.409
+  ring EPG/PEG only             8066.0    7092.0    0.064     -0.020
+  non-ring CX                  63256.8   18213.2    0.553      0.425
+(index > 0 = the CX state flips with the turn direction; corr > 0 = single cells are selective the way their wiring predicts)
+
+population            corr(R,L)   DSI      n(active)
+all CX                    0.813    0.143      497
+ring EPG/PEG              0.858   -0.161       60
+columnar                  0.750    0.343      123
+fanbody                   0.756    0.200      122
+other                     0.819    0.074      192
+LPTC (input pool)        -0.230   -0.042     1770
+whole circuit             0.850    0.006     7838
+
+(corr(R,L) < 0 = the steady-state pattern flips with the turn direction; |DSI| >> 0 = single cells are direction selective)
+
+definitions:
+  w_j      = (net input to CX cell j from side A) - (net input from side B), net = E - I
+  D(dir)   = sum_j w_j * rate_j(dir)
+  index    = (D(right) - D(left)) / (|D(right)| + |D(left)|)
+  corr(dr,w) = Pearson r over cells between (rate_j(right) - rate_j(left)) and w_j
+  corr(R,L)  = Pearson r over cells between the rate vector in the right-turn state and the
+               rate vector in the left-turn state (negative = the pattern flips with direction)
+  DSI      = mean over active cells of (r_right - r_left) / (r_right + r_left)
