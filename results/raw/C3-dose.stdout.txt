@@ -1,0 +1,62 @@
+﻿circuit: 12000 neurons, 1615753 synapses
+seeds: sugar=60 motor=312 odor=5262 selfmotion=1770 centralcomplex=2074
+
+   axis x: 2-means separation 0.814 (split at 365.9)
+   axis y: 2-means separation 0.561 (split at 179.2)
+   axis z: 2-means separation 0.587 (split at 194.8)
+   -> left-right axis = x at 365.9; visual pool splits 1508 / 1384
+
+dose response: 10 trials per patch fraction, 6 s each, yaw push-pull, kappa = 300
+
+   patch 0                              1 cells,       9 synapses into the CX (0 into the heading ring), = 0.0% of all CX input
+  frac 0 done
+   patch 0.125                        362 cells,   21682 synapses into the CX (827 into the heading ring), = 6.4% of all CX input
+  frac 0.125 done
+   patch 0.25                         723 cells,   30919 synapses into the CX (1354 into the heading ring), = 9.1% of all CX input
+  frac 0.25 done
+   patch 0.5                         1446 cells,   38861 synapses into the CX (1576 into the heading ring), = 11.5% of all CX input
+  frac 0.5 done
+
+metric                                frac=0          frac=0.125           frac=0.25            frac=0.5
+cx_rate_hz                            4.1055              4.0731              4.1090              4.0787
+cx_active_fraction                    0.2204              0.2215              0.2210              0.2185
+ring_rate_hz                         20.8544             20.5652             20.9294             20.6103
+columnar_rate_hz                      0.6941              0.6898              0.6935              0.6836
+fanbody_rate_hz                       3.6360              3.6451              3.6503              3.6487
+other_rate_hz                        11.3614             11.2297             11.3459             11.2646
+dim                                  51.3749             50.1064             50.9821             48.9433
+pop_rate_sd_hz                        1.0338              1.0157              1.0265              1.0379
+bumpR                                 0.3180              0.3171              0.3196              0.3206
+tau_ms                              245.8828            235.2917            242.5693            239.4805
+injected_events                  702365.1875         702546.3125         702786.5000         702281.6875
+pool_rate_hz                         50.6544             50.6593             50.6651             50.6803
+ring_pc12_var                         0.4321              0.4310              0.4210              0.4391
+ring_loop                             0.1233              0.1187              0.1133              0.1100
+ring_lag_yaw_deg                    -55.0237            -54.9479            -57.8426            -58.4556
+ring_track_gain_yaw                   2.6137              2.4576              2.2256              2.3877
+cx_yaw_modulation_hz                  1.9221              1.9330              1.9512              1.9474
+cx_tuning_wire_corr                   0.3202              0.3185              0.3195              0.3212
+ring_tuning_wire_corr                 0.0256              0.0299              0.0303              0.0208
+
+metric                     rho(frac)      p_perm   slope/trial
+cx_rate_hz                    -0.011      0.9565      -0.03216
+cx_active_fraction            -0.104      0.5152     -0.004662
+ring_rate_hz                  -0.048      0.7696       -0.2867
+columnar_rate_hz              -0.118      0.4808      -0.01892
+fanbody_rate_hz                0.089      0.5812       0.02312
+other_rate_hz                 -0.062      0.7211       -0.1124
+dim                           -0.176      0.2764        -4.222
+pop_rate_sd_hz                 0.056      0.7486       0.01913
+bumpR                          0.052      0.7466      0.006394
+tau_ms                        -0.031      0.8571        -6.665
+injected_events                0.014      0.9425        -199.7
+pool_rate_hz                   0.165      0.2899       0.05247
+ring_pc12_var                  0.058      0.7311       0.01266
+ring_loop                     -0.202      0.2139      -0.02651
+ring_lag_yaw_deg              -0.132      0.4298        -7.756
+ring_track_gain_yaw           -0.143      0.4003       -0.4466
+cx_yaw_modulation_hz           0.105      0.5447       0.05122
+cx_tuning_wire_corr            0.091      0.5887      0.003103
+ring_tuning_wire_corr         -0.110      0.4973      -0.01175
+
+wrote D:\projects\science\results\raw\C3-dose-dose-trials.csv / -dose-summary.csv / -dose-trend.csv
