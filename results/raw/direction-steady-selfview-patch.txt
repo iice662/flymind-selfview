@@ -1,0 +1,23 @@
+command: dotnet run -- ..\..\flymind.brain --asym --kappa 300 --secs 5 --yaw 0.6 --patch
+(same as direction-steady-natural.txt, but the 723-cell body patch is slip-free:
+ the compact 25% cluster of the visual pool reports no retinal slip; the rest of the pool
+ is scaled up so the total injected drive is unchanged)
+
+circuit 12000 neurons; visual pool 2892; patch 723 cells; |yaw| = 0.6, 5 s per direction
+
+readout                       D(right)   D(left)   index   corr(dr,w)
+CX (push-pull projection)     (line not captured in this run's tail)
+  ring EPG/PEG only             7274.0    5779.6    0.114     -0.025
+  non-ring CX                  42259.6   13652.0    0.512      0.296
+(index > 0 = the CX state flips with the turn direction; corr > 0 = single cells are selective the way their wiring predicts)
+
+population            corr(R,L)   DSI      n(active)
+all CX                    0.847    0.240      396
+ring EPG/PEG              0.789   -0.066       60
+columnar                  0.811    0.159       60
+fanbody                   0.712    0.500       99
+other                     0.908    0.225      177
+LPTC (input pool)        -0.313   -0.006     1770
+whole circuit             0.839    0.030     7709
+
+(non-ring CX: index 0.512 vs 0.553 natural, corr(dr,w) 0.296 vs 0.425 natural)
