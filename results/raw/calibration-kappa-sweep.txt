@@ -1,0 +1,19 @@
+command: dotnet run -- ..\..\flymind.brain --sweep 100 200 300 500 1000 --secs 2 --odor 0.05
+(before this: the same sweep with 1 3 10 30 100, and with kappa applied to the stimulation
+ as well - that variant saturated the stimulated cells at their Poisson rate and is not used)
+
+circuit: 12000 neurons, 1615753 synapses
+
+2 s per kappa, odour context 0.05, no resting tone.
+kappa scales CONNECTOME weights only - the stimulation event stays at the
+published w_syn * f_poi, so a stimulated cell fires at its Poisson rate and the
+only thing kappa changes is how far a spike travels through the connectome.
+
+kappa |     int sensory      AL      KC   dopam    MBON      DN   motor     int     int    LPTC      CX   CXact%  active%
+  100 |    8.42    7.17   21.11    0.00    0.13    0.00    3.87    0.00    0.00    0.00   68.76    0.03      0.3    45.8
+  200 |   18.34    7.19   44.14    1.90    1.01    2.80   13.32    0.00    0.00    0.00   72.12    0.09      0.7    51.6
+  300 |   28.24    7.14   62.56   16.63    1.52    7.63   21.87    0.35    0.00    0.00   76.36    1.35      8.2    57.5
+  500 |   44.41    8.22   90.91   49.48    4.01   28.31   33.03    2.97    0.00    0.00   83.36    8.56     32.1    65.6
+ 1000 |   74.24   22.35  144.36  147.09   50.07  104.50   63.26   40.53    0.00    0.00   96.95   23.84     47.5    75.6
+
+kappa = 300 used for every experiment below (CX 1.35 Hz, 8.2% of CX cells active).
