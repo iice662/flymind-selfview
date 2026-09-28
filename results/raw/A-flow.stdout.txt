@@ -1,0 +1,127 @@
+﻿circuit: 12000 neurons, 1615753 synapses
+seeds: sugar=60 motor=312 odor=5262 selfmotion=1770 centralcomplex=2074
+
+kappa (connectome gain, calibrated) = 300
+circuit: 12000 neurons, 1615753 synapses, CX readout 2074 (ring=68 columnar=1036 fanbody=601 other=369)
+drive model: global optic flow - the world sweeps past the whole eye
+   axis x: 2-means separation 0.814 (split at 365.9)
+   axis y: 2-means separation 0.561 (split at 179.2)
+   axis z: 2-means separation 0.587 (split at 194.8)
+   -> left-right axis = x at 365.9; visual pool splits 1508 / 1384
+
+visual pool 2892 cells = self-motion 1770 + CX relay 1122; body patch 723 cells (25%)
+
+   body patch (compact)               723 cells,   30919 synapses into the CX (1354 into the heading ring), = 9.1% of all CX input
+   control patch (same size, random)   723 cells,   13053 synapses into the CX (412 into the heading ring), = 3.8% of all CX input
+   control patch (CX-input matched)  2169 cells,   17396 synapses into the CX (306 into the heading ring), = 5.1% of all CX input
+
+
+  静息(无视觉输入)                trial 1/10   
+  静息(无视觉输入)                trial 2/10   
+  静息(无视觉输入)                trial 3/10   
+  静息(无视觉输入)                trial 4/10   
+  静息(无视觉输入)                trial 5/10   
+  静息(无视觉输入)                trial 6/10   
+  静息(无视觉输入)                trial 7/10   
+  静息(无视觉输入)                trial 8/10   
+  静息(无视觉输入)                trial 9/10   
+  静息(无视觉输入)                trial 10/10   
+  静息(无视觉输入)                done (10 trials)          
+
+  自然:世界光流                  trial 1/10   
+  自然:世界光流                  trial 2/10   
+  自然:世界光流                  trial 3/10   
+  自然:世界光流                  trial 4/10   
+  自然:世界光流                  trial 5/10   
+  自然:世界光流                  trial 6/10   
+  自然:世界光流                  trial 7/10   
+  自然:世界光流                  trial 8/10   
+  自然:世界光流                  trial 9/10   
+  自然:世界光流                  trial 10/10   
+  自然:世界光流                  done (10 trials)          
+
+  非自然:看见自己                 trial 1/10   
+  非自然:看见自己                 trial 2/10   
+  非自然:看见自己                 trial 3/10   
+  非自然:看见自己                 trial 4/10   
+  非自然:看见自己                 trial 5/10   
+  非自然:看见自己                 trial 6/10   
+  非自然:看见自己                 trial 7/10   
+  非自然:看见自己                 trial 8/10   
+  非自然:看见自己                 trial 9/10   
+  非自然:看见自己                 trial 10/10   
+  非自然:看见自己                 done (10 trials)          
+
+  对照:随机斑块                  trial 1/10   
+  对照:随机斑块                  trial 2/10   
+  对照:随机斑块                  trial 3/10   
+  对照:随机斑块                  trial 4/10   
+  对照:随机斑块                  trial 5/10   
+  对照:随机斑块                  trial 6/10   
+  对照:随机斑块                  trial 7/10   
+  对照:随机斑块                  trial 8/10   
+  对照:随机斑块                  trial 9/10   
+  对照:随机斑块                  trial 10/10   
+  对照:随机斑块                  done (10 trials)          
+
+  对照:随机斑块·匹配CX输入           trial 1/10   
+  对照:随机斑块·匹配CX输入           trial 2/10   
+  对照:随机斑块·匹配CX输入           trial 3/10   
+  对照:随机斑块·匹配CX输入           trial 4/10   
+  对照:随机斑块·匹配CX输入           trial 5/10   
+  对照:随机斑块·匹配CX输入           trial 6/10   
+  对照:随机斑块·匹配CX输入           trial 7/10   
+  对照:随机斑块·匹配CX输入           trial 8/10   
+  对照:随机斑块·匹配CX输入           trial 9/10   
+  对照:随机斑块·匹配CX输入           trial 10/10   
+  对照:随机斑块·匹配CX输入           done (10 trials)          
+
+  对照:斑块信号去相关               trial 1/10   
+  对照:斑块信号去相关               trial 2/10   
+  对照:斑块信号去相关               trial 3/10   
+  对照:斑块信号去相关               trial 4/10   
+  对照:斑块信号去相关               trial 5/10   
+  对照:斑块信号去相关               trial 6/10   
+  对照:斑块信号去相关               trial 7/10   
+  对照:斑块信号去相关               trial 8/10   
+  对照:斑块信号去相关               trial 9/10   
+  对照:斑块信号去相关               trial 10/10   
+  对照:斑块信号去相关               done (10 trials)          
+
+=== 结果 (10 trials/arm, 3 s/生物时间 per trial, 分析后半段) ===
+
+arm         pool-Hz  inj/step |  CX-Hz  active  corr   tau(ms)  dim   bumpR
+rest           21.5    0.00 |   0.25   0.014 -0.000       35 22.65  0.000
+flow           72.2   98.38 |   6.07   0.247  0.003      203 44.27  0.227
+self           70.1   97.40 |   3.73   0.178  0.004      174 37.59  0.351
+shuffle        70.8   97.41 |   6.10   0.253  0.005      200 44.43  0.243
+randmat        50.2   56.41 |   7.80   0.251  0.004       67 50.10  0.215
+decorr         70.3   97.88 |   3.81   0.178  0.002      145 38.50  0.337
+
+per subfamily        rest       flow       self    shuffle    randmat     decorr
+ring(EPG/PEG)                  0.00      25.37      18.20      26.64      30.28      18.52
+  active fraction             0.000      0.865      0.851      0.876      0.891      0.846
+columnar(PFN/PFR/hDelta)       0.00       0.95       0.34       1.04       2.19       0.36
+  active fraction             0.000      0.110      0.052      0.121      0.136      0.050
+fanbody(FB)                    0.00       6.23       3.38       5.96       7.88       3.46
+  active fraction             0.000      0.243      0.149      0.234      0.221      0.149
+other(LAL/IB/ER/TuBu)          1.42      16.60      11.16      16.72      19.29      11.37
+  active fraction             0.077      0.522      0.459      0.540      0.506      0.459
+
+=== 关键对比: self(看见自己) vs 各对照 (效应量 d, 置换检验 p, 两侧) ===
+metric                      self      flow   shuffle   randmat    decorr |  d(flow) p(flow)  d(shuf) p(shuf)  d(rndm) p(rndm)  d(dec)  p(dec)
+CX 平均放电率 (Hz)              3.732    6.065    6.097    7.803    3.812 | -16.90  0.0002  -17.60  0.0002  -37.55  0.0002   -0.54  0.2489
+CX 活跃细胞比例                  0.178    0.247    0.253    0.251    0.178 | -10.46  0.0002  -10.85  0.0002  -13.11  0.0002    0.10  0.8330
+ring 放电率 (Hz)             18.204   25.374   26.644   30.275   18.517 |  -6.28  0.0002   -7.90  0.0002  -13.01  0.0002   -0.26  0.5679
+columnar 放电率 (Hz)          0.340    0.952    1.045    2.189    0.356 | -10.00  0.0002  -11.16  0.0002  -49.27  0.0002   -0.38  0.4244
+fanbody 放电率 (Hz)           3.378    6.227    5.960    7.883    3.463 | -32.32  0.0002  -34.38  0.0002  -66.35  0.0002   -1.17  0.0162
+other 放电率 (Hz)            11.164   16.601   16.716   19.294   11.372 | -15.44  0.0002  -15.41  0.0002  -27.66  0.0002   -0.50  0.2757
+CX 成对相关                    0.004    0.003    0.005    0.004    0.002 |   0.15  0.7493   -0.49  0.2937   -0.28  0.5436    0.93  0.0592
+CX 自相关时间 (ms)            173.541  203.243  200.205   67.132  145.318 |  -1.24  0.0122   -1.11  0.0242    5.25  0.0002    1.14  0.0162
+CX 有效维度                   37.590   44.274   44.434   50.097   38.504 |  -1.96  0.0005   -2.20  0.0002   -3.63  0.0002   -0.28  0.5446
+CX 群体涨落 SD (Hz)            0.953    1.284    1.276    1.214    0.920 |  -5.60  0.0002   -6.28  0.0002   -4.30  0.0002    0.62  0.1837
+ring 群体向量幅值                0.351    0.227    0.243    0.215    0.337 |   4.54  0.0002    3.87  0.0002    4.60  0.0002    0.36  0.4321
+
+(d>0 = self 更大; p<0.05 表示该指标在 self 与对照之间可分)
+
+wrote D:\projects\science\results\raw\A-flow-trials.csv and D:\projects\science\results\raw\A-flow-summary.csv
