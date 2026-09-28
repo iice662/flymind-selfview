@@ -1,0 +1,7 @@
+arm,patch_cells,cx_input_synapses,ring_input_synapses,delivered_events_mean,delivered_ratio_vs_self,delivered_sd
+rest,0,0,0,0,0.000000,0
+flow,0,0,0,590064,1.000289,671.195
+self,723,30919,1354,589893,1.000000,988.777
+shuffle,723,13053,412,589890,0.999994,636.929
+randmat,353,30958,1382,590188,1.000500,506.516
+decorr,723,30919,1354,590393,1.000847,691.121
