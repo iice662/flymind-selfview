@@ -1,0 +1,21 @@
+{
+	Mods: {
+		FlyMind: {
+			Items: {
+				FlyFood: {
+					DisplayName: 果蝇食物
+					Tooltip:
+						'''
+						 左键：自己吃。什么都不会发生。
+						 右键：放在地上。果蝇会闻到它。
+						'''
+				}
+			}
+			NPCs: {
+				Fly: {
+					DisplayName: 果蝇
+				}
+			}
+		}
+	}
+}
