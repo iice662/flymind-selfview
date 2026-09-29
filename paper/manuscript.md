@@ -129,6 +129,66 @@ With the fly turning (multi-tone yaw command, 0.25 Hz dominant; 10 trials × 6 s
 > κ = 150 (0.679 → 0.462, ρ = −0.931) and κ = 600 (0.757 → 0.691, ρ = −0.673), both P = 2 ×
 > 10<sup>−4</sup>. The paragraph below is the pre-fix version.
 
+### The conflict effect does not depend on how the body region is defined
+
+The body patch of every experiment above is a compact cluster of somata (the 672 pool cells nearest
+the pool centroid). That is a proxy: the region a fly's own body occupies is a region of the
+*visual field*, not of the soma cloud. We therefore repeated the whole conflict series with the
+patch defined by receptive field instead - each pool cell's input sites taken from the released
+synaptic-partner table, its receptive-field position being the centroid of those sites, and the
+patch being the 672 cells nearest the centre of that map (rank-based, so size-matched by
+construction; the field-of-view assumption is stated in `tools/patch_from_rf.py`).
+
+Two things follow, and they point in opposite directions.
+
+**The graded conflict effect replicates.** Steering fidelity falls from 0.727 to 0.612 across
+alpha = 0 to 1 with the receptive-field patch, against 0.741 to 0.615 with the soma patch: the same
+monotone degradation of the steering command, at the same drive (delivered events equal across arms
+to within 0.1%; manipulation check `patch/surround` = 0.427 for both patches, so the manipulation
+reaches the cells it claims to in both cases). The paper's main result therefore does not depend on
+the patch definition.
+
+**The effect of the silent patch does.** With the same number of cells and a comparable share of CX
+input removed (11.7% for the receptive-field patch against 9.5% for the soma patch), the silent
+patch costs less direction tuning when it is defined by receptive field than when it is defined by
+soma position: `cx_tuning_wire_corr` 0.286 against 0.236 (natural condition 0.309). Input quantity
+alone therefore does not explain the silent-patch effect; *which* cells stop reporting self-motion
+matters, over and above how much input is removed.
+
+Both numbers are in `results/raw/N-rfpatch-*.csv`; the comparison is reproduced by
+`python tools\digest.py N-rfpatch I2-heading`.
+
+### Closing the loop with the descending command: an attempt that fails for a measurable reason
+
+The conflict series above measures the *quality* of the steering command. The behavioural question is
+whether the fly then flies worse, so we closed the loop: the turn is produced by the circuit's own
+descending left-right difference, low-pass filtered, and the visual drive is the heading error
+between a commanded course and the heading actually flown. The loop gain is calibrated once at
+alpha = 0 and then frozen for every arm, alpha and gain, so the comparison cannot be circular. Four
+defects had to be removed before the loop ran at all, and each is a trap of the same species as the
+one in ref. *8*'s calibration: (i) driving the pool with the *motor command* instead of the visual
+signal left the loop at a dead fixed point (command zero, therefore no rotation signal, therefore
+command zero); (ii) the stabilising sign is positive feedback - the asymmetry encodes the rotation
+the eye *senses*, which in closed loop *is* the error - and the opposite sign diverges
+(0.50 rad against 2.53); (iii) the asymmetry carries a DC imbalance unrelated to the error
+(mean -0.01 against excursions of +/-0.03), which pins the command at full turn if amplified raw;
+(iv) the usable gain is three orders of magnitude below the first guess.
+
+With the mechanism verified, **no gain we tried makes the fly hold the commanded course**: RMS
+heading error falls monotonically toward the open-loop value as the gain rises but never crosses it - 0.577, 0.543, 0.525 and 0.521 rad at gains of 30, 50, 80 and 100, and 0.49-0.61 across gains of 5-20 and the saturated regime above 200, against
+against 0.5017 rad when the loop is open, i.e. when the error is simply the commanded course itself.
+The reason is measurable: each 20 ms bin contains only 2-8 spikes across the ~59 descending cells of
+each side, so the population asymmetry (about +/-0.03) is dominated by Poisson noise at exactly the
+timescale a controller needs. The descending command is therefore a faithful *report* of heading -
+its correlation with the yaw command is 0.79 - but not a low-latency *control* signal in this slice.
+Closing the loop would need either a much longer integration paired with a correspondingly slower
+course, or a smoother population readout such as the ring state's own rotation. We report the
+attempt rather than a behaviour curve because a controller that never tracks cannot test the
+prediction, and because the failure is a property of the readout we could measure, not a claim about
+the fly.
+
+
+
 If the CX is perturbed by *inconsistent* rather than *missing* self-motion, the effect should be graded in the amount of inconsistency. We replaced a fraction α of the body patch's slip with a 100 ms block-shuffled copy of the same waveform — identical marginal distribution, progressively less alignment with the world's rotation — and ran α = 0, 0.25, 0.5, 0.75, 1 (10 trials × 6 s each, delivered drive matched to 0.07%; Fig. 4C–4H, Fig. 5A, 5B; Table 3).
 
 Every heading-dependent readout degraded monotonically with α (Spearman ρ against α at the trial level, 4,000 permutations):
@@ -193,7 +253,7 @@ Second, when the same manipulation is applied under global optic flow it does ch
 
 **Implications for connectome-constrained perturbation experiments.** The reversal documented here is not specific to our manipulation. Any experiment that perturbs a subset of a connectome-derived circuit — lesioning cells, silencing a region, injecting a signal — faces the same confound, because silencing a subset changes both *what* the downstream circuit receives and *how much*. We addressed it with (i) per-step drive balancing against the natural condition, (ii) a shared stimulus stream so the waveform is identical across arms, (iii) a control matched on silenced synapses rather than cells, and (iv) equivalence testing plus Bayes factors rather than null-hypothesis non-rejection. All four were necessary: the first two removed the artifact, the third attributed the surviving effect, and the fourth is what makes "no difference" a reportable quantity.
 
-**Limitations.** The circuit is a 12,000-neuron slice (7.2% of the CNS) whose composition over-represents the CX (17.3% of the slice against ≈0.9% of the CNS); absolute firing rates are not physiological and only within-circuit contrasts are meaningful. Every neuron carries roughly 15% of its true in-degree, and κ = 300 is the single parameter that compensates; we report the calibration and the ceiling it imposes but cannot exclude that a different regime would change the result. Transmitter signs are predictions, not measurements (33% of synapses inhibitory overall; 48% within the recurrent CX block). The body patch is an anatomical proxy: the blob carries no receptive-field map, so a compact cluster of somata stands in for a region of the visual field. There is no plasticity in the CX, and we did not model neuromodulation. The heading readout's coordinate is defined by the connectome's push-pull weights rather than by an anatomical ring map, and the ring's own trajectory is close to a leaky integrator (baseline circularity 0.11) rather than a clean rotating bump. Finally, 1,615,753 synapses is 1.1% of the CNS's 151.9 million; the pathway we manipulate is the one the connectome defines, at the resolution the slice preserves.
+**Limitations.** A closed-loop behavioural test was attempted and is reported as a negative result: the descending left-right difference in this slice carries 2-8 spikes per side per 20 ms bin, which is too sparse to close a heading loop, so the steering-command result above is a statement about the command's fidelity and not yet about flight behaviour. The receptive-field patch is a rank-based proxy: it selects the cells whose input sites lie nearest the centre of the pool's retinotopic map, which is not the same as the projection of a body of a given angular size, and the cells of the 1,095-cell connectome-derived relay have input sites but no annotated soma to compare against. The silent-patch effect is patch-definition-dependent (0.286 against 0.236 for direction tuning at the same patch size and comparable input loss), so its magnitude should be read as a property of this circuit and this patch, not as a general constant of the heading system. The circuit is a 12,000-neuron slice (7.2% of the CNS) whose composition over-represents the CX (17.3% of the slice against ≈0.9% of the CNS); absolute firing rates are not physiological and only within-circuit contrasts are meaningful. Every neuron carries roughly 15% of its true in-degree, and κ = 300 is the single parameter that compensates; we report the calibration and the ceiling it imposes but cannot exclude that a different regime would change the result. Transmitter signs are predictions, not measurements (33% of synapses inhibitory overall; 48% within the recurrent CX block). The body patch is an anatomical proxy: the blob carries no receptive-field map, so a compact cluster of somata stands in for a region of the visual field. There is no plasticity in the CX, and we did not model neuromodulation. The heading readout's coordinate is defined by the connectome's push-pull weights rather than by an anatomical ring map, and the ring's own trajectory is close to a leaky integrator (baseline circularity 0.11) rather than a clean rotating bump. Finally, 1,615,753 synapses is 1.1% of the CNS's 151.9 million; the pathway we manipulate is the one the connectome defines, at the resolution the slice preserves.
 
 ---
 
@@ -275,85 +335,176 @@ Display items are generated by `tools/make_main_figures.py` (main1–main4, main
 
 ---
 
-## Table 1. Equivalence and Bayes factors for the heading readouts (n = 10 per arm)
+## Table 1. Heading readouts per arm (I2-heading, kappa = 300, n = 10 trials per arm)
 
-> **SUPERSEDED — the values in this table are pre-fix.** They were computed on a contrast that
-> turned out to compare two identical drive conditions (see the status banner and
-> `results/CORRECTION.md` §1). Regenerate against the corrected families with
-> `python tools\compare_trials.py results\raw\I2-heading-trials.csv` (n = 10) and
-> `…\J2-n20-trials.csv` (n = 20); `python tools\digest.py` prints the corrected tables.
-| metric | contrast | Δ (self − control) | 90% CI | d | P (Welch) | P (TOST, \|d\|<0.5) | P (TOST, ±10%) | BF<sub>01</sub> |
-|---|---|---|---|---|---|---|---|---|
-| CX tuning ↔ wiring r | vs flow | −0.00047 | [−0.0075, 0.0066] | −0.05 | 0.91 | 0.165 | 2.5 × 10<sup>−7</sup> | 2.51 |
-| CX tuning ↔ wiring r | vs shuffle | −0.00173 | [−0.0103, 0.0068] | −0.16 | 0.74 | 0.227 | 5.3 × 10<sup>−6</sup> | 2.41 |
-| CX tuning ↔ wiring r | vs randmat | −0.00174 | [−0.0109, 0.0074] | −0.15 | 0.75 | 0.221 | 1.4 × 10<sup>−5</sup> | 2.42 |
-| CX tuning ↔ wiring r | vs decorr | +0.0727 | [0.0527, 0.0928] | +2.93 | 5.3 × 10<sup>−5</sup> | 1.00 | 0.999 | 3.0 × 10<sup>−4</sup> |
-| yaw modulation (Hz) | vs flow | −0.0128 | [−0.086, 0.060] | −0.14 | 0.76 | 0.217 | 3.1 × 10<sup>−4</sup> | 2.43 |
-| yaw modulation (Hz) | vs decorr | +0.716 | [0.652, 0.780] | +8.81 | 9.7 × 10<sup>−12</sup> | 1.00 | 1.00 | 4.2 × 10<sup>−11</sup> |
-| ring phase lag (°) | vs flow | +1.69 | [−12.1, 15.5] | +0.10 | 0.83 | 0.189 | 0.318 | 2.48 |
-| ring circularity | vs flow | −0.0047 | [−0.040, 0.031] | −0.10 | 0.82 | 0.196 | 0.361 | 2.47 |
-| bump R | vs flow | −0.0089 | [−0.024, 0.0059] | −0.47 | 0.31 | 0.471 | 0.0071 | 1.72 |
-| CX rate (Hz) | vs flow | +0.0688 | [0.0165, 0.1211] | +1.02 | 0.035 | 0.870 | 8.2 × 10<sup>−10</sup> | 0.46 |
-| effective dimensionality | vs flow | −0.93 | [−3.31, 1.45] | −0.30 | 0.51 | 0.334 | 0.0035 | 2.14 |
+Generated from `results/raw/I2-heading-trials.csv` by `python tools\make_tables.py`; every value in this table and in Tables 2-3 is recomputed from the deposited per-trial data, and `python tools\verify_headline_numbers.py` checks the quoted numbers against it.
 
-BF<sub>01</sub> = 1/BF<sub>10</sub>; the ceiling for this design is 2.52 (BF<sub>01</sub> at t = 0 with n = 10 per arm).
-
----
-
-## Table 2. Bayes factors at n = 20 per arm (doubling the trials raises the design ceiling to 3.24)
-
-> **SUPERSEDED — pre-fix.** The corrected n = 20 result is evidence *for a difference*, not for the
-> null: `cx_tuning_wire_corr` self vs flow d = −4.67 (BF<sub>10</sub> = 1.2 × 10<sup>14</sup>), vs
-> shuffle d = −5.79 (1.2 × 10<sup>17</sup>), vs randmat d = −2.58 (9.9 × 10<sup>6</sup>), vs decorr
-> d = +0.26 (BF<sub>01</sub> = 2.5); `steer_corr_yaw` self vs flow d = −3.33 (5.8 ×
-> 10<sup>9</sup>), vs randmat d = −4.41 (2.0 × 10<sup>13</sup>), vs decorr d = +3.25
-> (3.2 × 10<sup>9</sup>). Source: `results/raw/J2-n20-equivalence.csv`.
-
-| metric | vs flow | vs shuffle | vs randmat | vs decorr |
-|---|---|---|---|---|
-| CX tuning ↔ wiring *r* (d) | 2.84 (−0.18) | 2.85 (−0.18) | **3.03** (+0.13) | BF<sub>10</sub> = 2.1 × 10<sup>9</sup> |
-| yaw modulation depth (d) | 2.79 (+0.19) | 2.56 (+0.24) | **3.15** (+0.08) | BF<sub>10</sub> = 9.9 × 10<sup>12</sup> |
-| ring trajectory circularity | **3.04** (+0.13) | 2.95 (+0.15) | 2.23 (−0.31) | 2.11 (+0.33) |
-| ring state top-2 variance | **3.09** (+0.11) | 2.23 (+0.31) | 2.53 (−0.25) | 2.98 (+0.15) |
-| bump amplitude | 1.51 (+0.44) | 2.88 (+0.17) | 2.90 (+0.17) | BF<sub>10</sub> = 1.5 × 10<sup>3</sup> |
-| CX mean rate | 2.39 (−0.28) | 2.05 (+0.34) | 2.83 (+0.18) | 2.79 (−0.19) |
-| effective dimensionality | 2.70 (−0.21) | 1.97 (−0.36) | 2.11 (−0.33) | BF<sub>10</sub> = 157 |
-| ring phase lag behind yaw | 0.74 (−0.62) | 0.85 (−0.59) | 1.08 (−0.53) | 1.51 (+0.44) |
-
-Figures in parentheses are Cohen's d (self − control). Bold = BF<sub>01</sub> > 3. Delivered drive matched to 0.05%; expected totals identical in all arms.
+| readout | rest | flow | self | shuffle | randmat | decorr | conf25 | conf50 | conf75 |
+|---|---|---|---|---|---|---|---|---|---|
+| CX rate (Hz) | 0.2523 | 3.952 | 3.172 | 3.819 | 3.235 | 3.962 | 3.42 | 3.63 | 3.853 |
+| CX active fraction | 0.0135 | 0.2145 | 0.1696 | 0.2083 | 0.1756 | 0.201 | 0.1737 | 0.1852 | 0.1965 |
+| yaw modulation (Hz) | 0 | 1.919 | 1.153 | 1.542 | 0.9526 | 0.9366 | 0.9853 | 0.9717 | 0.9713 |
+| tuning <-> wiring r | 0 | 0.3093 | 0.2359 | 0.3424 | 0.31 | 0.252 | 0.2518 | 0.2549 | 0.2539 |
+| steering fidelity | 0 | 0.786 | 0.7405 | 0.7702 | 0.8143 | 0.6154 | 0.7142 | 0.6793 | 0.6541 |
+| steering amplitude (Hz) | 182.1 | 501.9 | 424.3 | 488.9 | 525.7 | 431.3 | 423 | 425.5 | 422.4 |
+| descending rate (Hz) | 1060 | 2072 | 1930 | 2093 | 2072 | 2076 | 1976 | 2009 | 2041 |
+| population tau (ms) | 31.85 | 223.2 | 150.3 | 196.8 | 146.2 | 131 | 104.3 | 117.6 | 116.5 |
+| dim. (PR) | 25.25 | 51 | 52.83 | 53.97 | 53.92 | 59.86 | 55.12 | 54.54 | 57.99 |
+| bump R | 0 | 0.3269 | 0.3585 | 0.3315 | 0.3364 | 0.2742 | 0.3278 | 0.3036 | 0.2765 |
+| ring circularity | 1 | 0.1333 | 0.1687 | 0.1553 | 0.1333 | 0.112 | 0.1553 | 0.1313 | 0.14 |
+| ring PC1-2 var | 0 | 0.4215 | 0.4357 | 0.4349 | 0.4123 | 0.3995 | 0.4408 | 0.4275 | 0.4231 |
+| fluctuation SD (Hz) | 0.04831 | 0.9971 | 0.7568 | 0.9306 | 0.7642 | 0.8419 | 0.7748 | 0.8029 | 0.828 |
+| delivered events | 0 | 6.551e+05 | 6.552e+05 | 6.553e+05 | 6.551e+05 | 6.558e+05 | 6.555e+05 | 6.556e+05 | 6.554e+05 |
+| patch/surround | 0 | 0.9767 | 0.4257 | 0.4269 | 0.4614 | 0.8918 | 0.5143 | 0.636 | 0.7619 |
 
 ---
 
-## Table 3. Conflict dose: every readout against α (κ = 300, n = 10 per level, 6 s per trial)
+## Table 2. Self versus each control manipulation: difference, effect size, equivalence test and Bayes factor
 
-> **SUPERSEDED — pre-fix.** Corrected conflict-dose means, trends and P values are in
-> `paper/tables.md` Table 3 (generated from `results/raw/I2-heading-trials.csv`). Corrected
-> headline: steering fidelity 0.741 → 0.615 (ρ = −0.845, P = 2 × 10<sup>−4</sup>) at flat drive
-> (ρ = +0.13) and flat steering amplitude (ρ = +0.12), with ring bump R 0.359 → 0.274
-> (ρ = −0.817).
+| readout | contrast | diff | d | P (TOST, +-10%) | BF01 | BF10 |
+|---|---|---|---|---|---|---|
+| delivered events (n = 10) | vs flow | 165.4 | 0.173 | 1.2e-29 | 2.39 | 0.419 |
+| delivered events (n = 10) | vs shuffle | -18 | -0.019 | 1.1e-29 | 2.52 | 0.398 |
+| delivered events (n = 10) | vs randmat | 139.7 | 0.167 | 2.4e-27 | 2.4 | 0.417 |
+| delivered events (n = 10) | vs decorr | -550.2 | -0.590 | 1.1e-29 | 1.38 | 0.723 |
+| CX rate (Hz) (n = 10) | vs flow | -0.7802 | -9.773 | 1 | 7.84e-12 | 1.28e+11 |
+| CX rate (Hz) (n = 10) | vs shuffle | -0.6474 | -9.888 | 1 | 6.48e-12 | 1.54e+11 |
+| CX rate (Hz) (n = 10) | vs randmat | -0.06276 | -0.919 | 5e-08 | 0.624 | 1.6 |
+| CX rate (Hz) (n = 10) | vs decorr | -0.7902 | -8.634 | 1 | 5.79e-11 | 1.73e+10 |
+| CX active fraction (n = 10) | vs flow | -0.04484 | -10.117 | 1 | 4.47e-12 | 2.24e+11 |
+| CX active fraction (n = 10) | vs shuffle | -0.03867 | -9.549 | 1 | 1.14e-11 | 8.77e+10 |
+| CX active fraction (n = 10) | vs randmat | -0.005979 | -1.251 | 3.2e-05 | 0.219 | 4.58 |
+| CX active fraction (n = 10) | vs decorr | -0.03134 | -5.957 | 1 | 1.95e-08 | 5.13e+07 |
+| population tau (ms) (n = 10) | vs flow | -72.91 | -2.872 | 1 | 0.000374 | 2.67e+03 |
+| population tau (ms) (n = 10) | vs shuffle | -46.53 | -1.888 | 0.98 | 0.0195 | 51.2 |
+| population tau (ms) (n = 10) | vs randmat | 4.107 | 0.148 | 0.2 | 2.42 | 0.413 |
+| population tau (ms) (n = 10) | vs decorr | 19.27 | 0.577 | 0.66 | 1.42 | 0.706 |
+| dim. (PR) (n = 10) | vs flow | 1.832 | 0.515 | 0.028 | 1.59 | 0.63 |
+| dim. (PR) (n = 10) | vs shuffle | -1.133 | -0.300 | 0.011 | 2.15 | 0.466 |
+| dim. (PR) (n = 10) | vs randmat | -1.083 | -0.180 | 0.069 | 2.38 | 0.421 |
+| dim. (PR) (n = 10) | vs decorr | -7.03 | -2.088 | 0.75 | 0.0087 | 115 |
+| fluctuation SD (Hz) (n = 10) | vs flow | -0.2403 | -8.608 | 1 | 6.08e-11 | 1.65e+10 |
+| fluctuation SD (Hz) (n = 10) | vs shuffle | -0.1738 | -5.265 | 1 | 1.24e-07 | 8.05e+06 |
+| fluctuation SD (Hz) (n = 10) | vs randmat | -0.007352 | -0.266 | 1.4e-05 | 2.22 | 0.45 |
+| fluctuation SD (Hz) (n = 10) | vs decorr | -0.08504 | -2.170 | 0.52 | 0.00624 | 160 |
+| bump R (n = 10) | vs flow | 0.03158 | 1.441 | 0.46 | 0.111 | 9.02 |
+| bump R (n = 10) | vs shuffle | 0.02691 | 1.258 | 0.26 | 0.213 | 4.69 |
+| bump R (n = 10) | vs randmat | 0.02202 | 0.857 | 0.16 | 0.739 | 1.35 |
+| bump R (n = 10) | vs decorr | 0.0843 | 3.707 | 1 | 1.68e-05 | 5.97e+04 |
+| patch/surround (n = 10) | vs flow | -0.551 | -3505.490 | 1 | 4.93e-31 | 2.03e+30 |
+| patch/surround (n = 10) | vs shuffle | -0.001243 | -5.702 | 3.1e-38 | 3.78e-08 | 2.64e+07 |
+| patch/surround (n = 10) | vs randmat | -0.03565 | -162.215 | 5.2e-43 | 4.09e-29 | 2.45e+28 |
+| patch/surround (n = 10) | vs decorr | -0.4661 | -41.459 | 1 | 4.86e-22 | 2.06e+21 |
+| ring PC1-2 var (n = 10) | vs flow | 0.01418 | 0.613 | 0.0081 | 1.32 | 0.758 |
+| ring PC1-2 var (n = 10) | vs shuffle | 0.0007921 | 0.022 | 0.0094 | 2.52 | 0.398 |
+| ring PC1-2 var (n = 10) | vs randmat | 0.02337 | 0.691 | 0.13 | 1.11 | 0.897 |
+| ring PC1-2 var (n = 10) | vs decorr | 0.03621 | 1.030 | 0.41 | 0.45 | 2.22 |
+| ring circularity (n = 10) | vs flow | 0.03533 | 0.852 | 0.87 | 0.749 | 1.33 |
+| ring circularity (n = 10) | vs shuffle | 0.01333 | 0.352 | 0.45 | 2.02 | 0.494 |
+| ring circularity (n = 10) | vs randmat | 0.03533 | 1.298 | 0.96 | 0.186 | 5.38 |
+| ring circularity (n = 10) | vs decorr | 0.05667 | 1.756 | 1 | 0.0331 | 30.2 |
+| yaw modulation (Hz) (n = 10) | vs flow | -0.7668 | -7.119 | 1 | 1.24e-09 | 8.07e+08 |
+| yaw modulation (Hz) (n = 10) | vs shuffle | -0.3895 | -3.043 | 1 | 0.000193 | 5.19e+03 |
+| yaw modulation (Hz) (n = 10) | vs randmat | 0.2001 | 1.336 | 0.93 | 0.163 | 6.15 |
+| yaw modulation (Hz) (n = 10) | vs decorr | 0.2161 | 1.384 | 0.95 | 0.137 | 7.3 |
+| tuning <-> wiring r (n = 10) | vs flow | -0.07341 | -3.518 | 1 | 3.29e-05 | 3.04e+04 |
+| tuning <-> wiring r (n = 10) | vs shuffle | -0.1065 | -4.680 | 1 | 6.89e-07 | 1.45e+06 |
+| tuning <-> wiring r (n = 10) | vs randmat | -0.07409 | -1.805 | 0.98 | 0.0272 | 36.8 |
+| tuning <-> wiring r (n = 10) | vs decorr | -0.01608 | -0.556 | 0.24 | 1.47 | 0.679 |
+| steering fidelity (n = 10) | vs flow | -0.04547 | -2.868 | 0.0001 | 0.00038 | 2.63e+03 |
+| steering fidelity (n = 10) | vs shuffle | -0.02962 | -2.070 | 3.6e-07 | 0.00936 | 107 |
+| steering fidelity (n = 10) | vs randmat | -0.07379 | -4.635 | 0.15 | 7.92e-07 | 1.26e+06 |
+| steering fidelity (n = 10) | vs decorr | 0.1251 | 4.615 | 1 | 8.43e-07 | 1.19e+06 |
+| steering amplitude (Hz) (n = 10) | vs flow | -77.65 | -6.358 | 1 | 7.2e-09 | 1.39e+08 |
+| steering amplitude (Hz) (n = 10) | vs shuffle | -64.64 | -5.668 | 1 | 4.14e-08 | 2.42e+07 |
+| steering amplitude (Hz) (n = 10) | vs randmat | -101.4 | -8.265 | 1 | 1.17e-10 | 8.57e+09 |
+| steering amplitude (Hz) (n = 10) | vs decorr | -6.972 | -0.490 | 1.9e-05 | 1.66 | 0.603 |
+| descending rate (Hz) (n = 10) | vs flow | -141.6 | -11.920 | 3.9e-09 | 3.07e-13 | 3.26e+12 |
+| descending rate (Hz) (n = 10) | vs shuffle | -162.8 | -21.812 | 2.9e-11 | 1.46e-17 | 6.83e+16 |
+| descending rate (Hz) (n = 10) | vs randmat | -141.9 | -12.575 | 1.3e-09 | 1.27e-13 | 7.85e+12 |
+| descending rate (Hz) (n = 10) | vs decorr | -145.7 | -8.391 | 3.3e-06 | 9.15e-11 | 1.09e+10 |
+| delivered events (n = 20) | vs flow | 2.2 | 0.002 | 1.8e-60 | 3.24 | 0.309 |
+| delivered events (n = 20) | vs shuffle | 78.1 | 0.104 | 3.1e-61 | 3.1 | 0.322 |
+| delivered events (n = 20) | vs randmat | 133.3 | 0.168 | 6.6e-63 | 2.89 | 0.345 |
+| delivered events (n = 20) | vs decorr | -80.55 | -0.104 | 1.7e-62 | 3.1 | 0.322 |
+| CX rate (Hz) (n = 20) | vs flow | -0.7641 | -10.730 | 1 | 4.57e-27 | 2.19e+26 |
+| CX rate (Hz) (n = 20) | vs shuffle | -0.6354 | -7.278 | 1 | 3.76e-21 | 2.66e+20 |
+| CX rate (Hz) (n = 20) | vs randmat | 0.006164 | 0.084 | 2.4e-16 | 3.15 | 0.318 |
+| CX rate (Hz) (n = 20) | vs decorr | -0.8288 | -9.206 | 1 | 1.05e-24 | 9.54e+23 |
+| CX active fraction (n = 20) | vs flow | -0.042 | -9.987 | 1 | 5.87e-26 | 1.7e+25 |
+| CX active fraction (n = 20) | vs shuffle | -0.03652 | -8.295 | 1 | 4.04e-23 | 2.47e+22 |
+| CX active fraction (n = 20) | vs randmat | -0.006919 | -1.373 | 5.7e-08 | 0.00468 | 214 |
+| CX active fraction (n = 20) | vs decorr | -0.03469 | -5.708 | 1 | 1.34e-17 | 7.44e+16 |
+| population tau (ms) (n = 20) | vs flow | -90.21 | -4.534 | 1 | 2.12e-14 | 4.71e+13 |
+| population tau (ms) (n = 20) | vs shuffle | -56.12 | -2.743 | 1 | 2.41e-08 | 4.16e+07 |
+| population tau (ms) (n = 20) | vs randmat | -10.64 | -0.529 | 0.25 | 1.08 | 0.922 |
+| population tau (ms) (n = 20) | vs decorr | 8.261 | 0.310 | 0.29 | 2.21 | 0.452 |
+| dim. (PR) (n = 20) | vs flow | -3.134 | -0.721 | 0.055 | 0.441 | 2.27 |
+| dim. (PR) (n = 20) | vs shuffle | -0.71 | -0.140 | 0.0043 | 3 | 0.334 |
+| dim. (PR) (n = 20) | vs randmat | -0.5203 | -0.085 | 0.011 | 3.15 | 0.318 |
+| dim. (PR) (n = 20) | vs decorr | -6 | -1.119 | 0.57 | 0.0341 | 29.3 |
+| fluctuation SD (Hz) (n = 20) | vs flow | -0.1863 | -5.637 | 1 | 2.02e-17 | 4.94e+16 |
+| fluctuation SD (Hz) (n = 20) | vs shuffle | -0.1452 | -4.678 | 1 | 7.99e-15 | 1.25e+14 |
+| fluctuation SD (Hz) (n = 20) | vs randmat | 0.01375 | 0.440 | 1.2e-07 | 1.51 | 0.661 |
+| fluctuation SD (Hz) (n = 20) | vs decorr | -0.09944 | -2.827 | 0.86 | 1.16e-08 | 8.6e+07 |
+| bump R (n = 20) | vs flow | 0.05003 | 1.893 | 0.98 | 4.99e-05 | 2.01e+04 |
+| bump R (n = 20) | vs shuffle | 0.03776 | 1.452 | 0.69 | 0.00241 | 414 |
+| bump R (n = 20) | vs randmat | 0.02605 | 0.861 | 0.18 | 0.198 | 5.06 |
+| bump R (n = 20) | vs decorr | 0.09646 | 3.869 | 1 | 2.49e-12 | 4.01e+11 |
+| patch/surround (n = 20) | vs flow | -0.551 | -4052.790 | 1 | 2.16e-73 | 4.63e+72 |
+| patch/surround (n = 20) | vs shuffle | -0.001243 | -6.571 | 8.2e-81 | 1.22e-19 | 8.18e+18 |
+| patch/surround (n = 20) | vs randmat | -0.03565 | -186.917 | 6.6e-91 | 1.7e-67 | 5.9e+66 |
+| patch/surround (n = 20) | vs decorr | -0.4674 | -44.560 | 1 | 2.66e-49 | 3.76e+48 |
+| ring PC1-2 var (n = 20) | vs flow | 0.04253 | 1.307 | 0.56 | 0.008 | 125 |
+| ring PC1-2 var (n = 20) | vs shuffle | 0.03996 | 1.255 | 0.45 | 0.0121 | 82.5 |
+| ring PC1-2 var (n = 20) | vs randmat | 0.04603 | 1.302 | 0.68 | 0.00832 | 120 |
+| ring PC1-2 var (n = 20) | vs decorr | 0.03191 | 0.844 | 0.2 | 0.219 | 4.57 |
+| ring circularity (n = 20) | vs flow | 0.06067 | 1.360 | 1 | 0.0052 | 192 |
+| ring circularity (n = 20) | vs shuffle | 0.04533 | 1.182 | 0.99 | 0.0213 | 47 |
+| ring circularity (n = 20) | vs randmat | 0.02933 | 0.666 | 0.84 | 0.584 | 1.71 |
+| ring circularity (n = 20) | vs decorr | 0.05467 | 1.342 | 1 | 0.00604 | 166 |
+| yaw modulation (Hz) (n = 20) | vs flow | -0.8193 | -7.411 | 1 | 2.02e-21 | 4.96e+20 |
+| yaw modulation (Hz) (n = 20) | vs shuffle | -0.5445 | -4.726 | 1 | 5.84e-15 | 1.71e+14 |
+| yaw modulation (Hz) (n = 20) | vs randmat | 0.08272 | 0.703 | 0.35 | 0.484 | 2.07 |
+| yaw modulation (Hz) (n = 20) | vs decorr | 0.03291 | 0.236 | 0.064 | 2.59 | 0.386 |
+| tuning <-> wiring r (n = 20) | vs flow | -0.06653 | -4.670 | 1 | 8.45e-15 | 1.18e+14 |
+| tuning <-> wiring r (n = 20) | vs shuffle | -0.09212 | -5.785 | 1 | 8.66e-18 | 1.15e+17 |
+| tuning <-> wiring r (n = 20) | vs randmat | -0.06332 | -2.580 | 1 | 1.01e-07 | 9.92e+06 |
+| tuning <-> wiring r (n = 20) | vs decorr | 0.0109 | 0.255 | 0.18 | 2.5 | 0.4 |
+| steering fidelity (n = 20) | vs flow | -0.05451 | -3.328 | 1.8e-05 | 1.72e-10 | 5.81e+09 |
+| steering fidelity (n = 20) | vs shuffle | -0.03001 | -1.697 | 2.3e-10 | 0.000289 | 3.46e+03 |
+| steering fidelity (n = 20) | vs randmat | -0.07398 | -4.406 | 0.097 | 5.11e-14 | 1.96e+13 |
+| steering fidelity (n = 20) | vs decorr | 0.1364 | 3.254 | 1 | 3.15e-10 | 3.17e+09 |
+| steering amplitude (Hz) (n = 20) | vs flow | -69.65 | -5.369 | 1 | 9.97e-17 | 1e+16 |
+| steering amplitude (Hz) (n = 20) | vs shuffle | -67.31 | -3.630 | 1 | 1.56e-11 | 6.42e+10 |
+| steering amplitude (Hz) (n = 20) | vs randmat | -90.26 | -5.901 | 1 | 4.48e-18 | 2.23e+17 |
+| steering amplitude (Hz) (n = 20) | vs decorr | -5.105 | -0.256 | 4.2e-07 | 2.5 | 0.401 |
+| descending rate (Hz) (n = 20) | vs flow | -150.4 | -13.113 | 1.3e-46 | 3.47e-30 | 2.88e+29 |
+| descending rate (Hz) (n = 20) | vs shuffle | -178.7 | -14.089 | 8.2e-10 | 2.61e-31 | 3.83e+30 |
+| descending rate (Hz) (n = 20) | vs randmat | -156.6 | -11.740 | 6.7e-15 | 1.84e-28 | 5.43e+27 |
+| descending rate (Hz) (n = 20) | vs decorr | -150.3 | -8.810 | 3.6e-12 | 4.92e-24 | 2.03e+23 |
 
-| readout | α = 0 | 0.25 | 0.50 | 0.75 | 1.00 | ρ vs α | P (perm.) |
+---
+
+## Table 3. Conflict dose: every readout against alpha (kappa = 300, n = 10 per level, 6 s per trial)
+
+| readout | a=0 | a=0.25 | a=0.5 | a=0.75 | a=1 | rho | P |
 |---|---|---|---|---|---|---|---|
-| steering fidelity (`steer_corr_yaw`) | 0.8119 | 0.7802 | 0.7558 | 0.6789 | 0.6057 | −0.943 | 2 × 10<sup>−4</sup> |
-| yaw modulation depth (Hz) | 1.969 | 1.790 | 1.618 | 1.400 | 1.253 | −0.924 | 2 × 10<sup>−4</sup> |
-| steering amplitude (Hz) | 640.6 | 608.5 | 566.6 | 532.7 | 509.1 | −0.913 | 2 × 10<sup>−4</sup> |
-| population τ (ms) | 246.9 | 231.6 | 197.7 | 171.4 | 163.3 | −0.887 | 2 × 10<sup>−4</sup> |
-| CX tuning ↔ wiring *r* | 0.3169 | 0.3181 | 0.3031 | 0.2782 | 0.2442 | −0.816 | 2 × 10<sup>−4</sup> |
-| fluctuation SD (Hz) | 1.026 | 0.973 | 0.933 | 0.9007 | 0.8985 | −0.759 | 2 × 10<sup>−4</sup> |
-| columnar active fraction | 0.1074 | 0.1029 | 0.09566 | 0.09508 | 0.09353 | −0.637 | 2 × 10<sup>−4</sup> |
-| effective dimensionality | 50.42 | 52.85 | 55.45 | 56.65 | 59.01 | +0.571 | 2 × 10<sup>−4</sup> |
-| CX active fraction | 0.2218 | 0.2163 | 0.2112 | 0.2117 | 0.2130 | −0.539 | 2 × 10<sup>−4</sup> |
-| ring active fraction | 0.8676 | 0.8544 | 0.8544 | 0.8529 | 0.8338 | −0.500 | 7 × 10<sup>−4</sup> |
-| bump *R* | 0.3113 | 0.2991 | 0.2956 | 0.2867 | 0.2687 | −0.493 | 7 × 10<sup>−4</sup> |
-| ring phase lag behind yaw (°) | −53.59 | −64.03 | −78.86 | −76.97 | −70.48 | −0.330 | 0.020 |
-| ring rate (Hz) | 20.94 | 20.77 | 20.86 | 20.86 | 21.82 | +0.321 | 0.024 |
-| *unchanged:* CX mean rate (Hz) | 4.133 | 4.026 | 3.995 | 4.028 | 4.171 | +0.103 | 0.46 |
-| *unchanged:* ring angle diffusion (°) | 228.4 | 253.7 | 227.4 | 241.4 | 252.1 | +0.100 | 0.48 |
-| *unchanged:* ring state top-2 variance | 0.4174 | 0.4110 | 0.4195 | 0.4084 | 0.4101 | −0.078 | 0.59 |
-| *unchanged:* delivered events | 7.028 × 10<sup>5</sup> | 7.026 × 10<sup>5</sup> | 7.026 × 10<sup>5</sup> | 7.024 × 10<sup>5</sup> | 7.028 × 10<sup>5</sup> | −0.038 | 0.79 |
-| *unchanged:* turned (deg) | −60.9 | −60.9 | −60.9 | −60.9 | −60.9 | 0.000 | 1.00 |
-
-Spearman ρ against α with a permutation P (4,000 draws); the first thirteen rows are ordered by |ρ|. The last five rows are the flat controls: the average CX rate, the ring's angular diffusion and state variance, the delivered drive and the turn itself do not move with α, so the graded degradation above is not a rate, drive or trajectory artefact. The same series at κ = 150 and κ = 600 (n = 6) preserves the rank order (Fig. 5B).
+| CX rate (Hz) | 3.172 | 3.42 | 3.63 | 3.853 | 3.962 | +0.952 | 0.0002 |
+| CX active fraction | 0.1696 | 0.1737 | 0.1852 | 0.1965 | 0.201 | +0.887 | 0.0002 |
+| yaw modulation (Hz) | 1.153 | 0.9853 | 0.9717 | 0.9713 | 0.9366 | -0.335 | 0.021 |
+| tuning <-> wiring r | 0.2359 | 0.2518 | 0.2549 | 0.2539 | 0.252 | +0.246 | 0.093 |
+| steering fidelity | 0.7405 | 0.7142 | 0.6793 | 0.6541 | 0.6154 | -0.845 | 0.0002 |
+| steering amplitude (Hz) | 424.3 | 423 | 425.5 | 422.4 | 431.3 | +0.119 | 0.41 |
+| descending rate (Hz) | 1930 | 1976 | 2009 | 2041 | 2076 | +0.958 | 0.0002 |
+| population tau (ms) | 150.3 | 104.3 | 117.6 | 116.5 | 131 | -0.076 | 0.6 |
+| dim. (PR) | 52.83 | 55.12 | 54.54 | 57.99 | 59.86 | +0.503 | 0.0005 |
+| bump R | 0.3585 | 0.3278 | 0.3036 | 0.2765 | 0.2742 | -0.817 | 0.0002 |
+| ring circularity | 0.1687 | 0.1553 | 0.1313 | 0.14 | 0.112 | -0.444 | 0.0007 |
+| ring PC1-2 var | 0.4357 | 0.4408 | 0.4275 | 0.4231 | 0.3995 | -0.363 | 0.0085 |
+| fluctuation SD (Hz) | 0.7568 | 0.7748 | 0.8029 | 0.828 | 0.8419 | +0.698 | 0.0002 |
+| delivered events | 6.552e+05 | 6.555e+05 | 6.556e+05 | 6.554e+05 | 6.558e+05 | +0.134 | 0.36 |
+| patch/surround | 0.4257 | 0.5143 | 0.636 | 0.7619 | 0.8918 | +0.980 | 0.0002 |
 
 ---
 
