@@ -1,0 +1,538 @@
+<html><head><meta charset='utf-8'><style>
+body { font-family: "Times New Roman", serif; font-size: 12pt; line-height: 2.0; }
+h1 { font-size: 14pt; } h2 { font-size: 13pt; } h3 { font-size: 12pt; font-style: italic; }
+table { border-collapse: collapse; font-size: 9pt; line-height: 1.2; }
+td, th { border: 1px solid #444; padding: 2px 4px; }
+blockquote { font-size: 10pt; line-height: 1.3; color: #333; }
+code { font-family: "Courier New", monospace; font-size: 10pt; }
+</style></head><body><p>﻿# Missing versus conflicting self-motion signals act differently on the <i>Drosophila</i> central complex</p>
+
+<blockquote><b>STATUS: superseded in part 鈥?read <code>results/CORRECTION.md</code> before using any number in this file.</b></blockquote>
+<blockquote>Three defects were found in the circuit and drive code after this draft was written. (A) The yaw</blockquote>
+<blockquote>drive never applied the body-lock factor, so the "slip-free body patch" arm was numerically the</blockquote>
+<blockquote>natural condition: the paper's central null (self vs flow, d = 鈭?.05, P = 0.91, BF&lt;sub&gt;01&lt;/sub&gt; =</blockquote>
+<blockquote>2.8鈥?.2) compared a condition with itself and is <b>void</b>. (B) The "visual pool" pattern included</blockquote>
+<blockquote>the <code>JO-EV*</code> Johnston's-organ (antennal mechanosensory) types, 176 of 1,770 pool cells, which have</blockquote>
+<blockquote>no annotated soma. (C) The pool array overlapped the relay array by 6 cells. All three are fixed,</blockquote>
+<blockquote>the circuit was rebuilt (<code>flymind.brain</code>, SHA256 <code>FC6B544C鈥?7827AB</code>) and every experiment re-run</blockquote>
+<blockquote>(<code>A4-flow</code>, <code>I2-heading</code>, <code>J2-n20</code>, <code>K2-k150</code>, <code>L2-k600</code>, <code>M2-dose</code>, <code>D2-controls</code>, <code>P2-propagation</code>).</blockquote>
+<p>&gt;</p>
+<blockquote><b>The corrected result reverses the central claim.</b> A body-locked (slip-free) region of the eye</blockquote>
+<blockquote><i>does</i> degrade heading coding, graded in the size of the region: at n = 20, self vs flow gives</blockquote>
+<blockquote>d = 鈭?.67 (BF&lt;sub&gt;10&lt;/sub&gt; = 1.2 脳 10&lt;sup&gt;14&lt;/sup&gt;) for direction tuning and d = 鈭?.33</blockquote>
+<blockquote>(BF&lt;sub&gt;10&lt;/sub&gt; = 5.8 脳 10&lt;sup&gt;9&lt;/sup&gt;) for steering fidelity; the patch-size dose is monotone</blockquote>
+<blockquote>(tuning 蟻 = 鈭?.91, CX rate 蟻 = 鈭?.94, both P = 5 脳 10&lt;sup&gt;鈭?&lt;/sup&gt;). Part of that is input loss 鈥?a</blockquote>
+<blockquote>matched random patch reproduces the rate, 蟿 and fluctuation changes 鈥?but not the coding: self vs</blockquote>
+<blockquote>randmat is d = 鈭?.58 (BF&lt;sub&gt;10&lt;/sub&gt; = 9.9 脳 10&lt;sup&gt;6&lt;/sup&gt;) for tuning and d = 鈭?.41</blockquote>
+<blockquote>(BF&lt;sub&gt;10&lt;/sub&gt; = 2.0 脳 10&lt;sup&gt;13&lt;/sup&gt;) for steering. Conflicting slip remains a <i>different kind</i></blockquote>
+<blockquote>of damage: at constant drive and constant steering amplitude it leaves the rates flat-to-higher</blockquote>
+<blockquote>while driving steering fidelity monotonically from 0.741 to 0.615 (蟻 = 鈭?.845) and flattening the</blockquote>
+<blockquote>ring bump (0.359 鈫?0.274, 蟻 = 鈭?.817).</blockquote>
+<p>&gt;</p>
+<blockquote>The Abstract, the Results subsections on yaw and patch size, Tables 1鈥? and the Fig. 1鈥? legends</blockquote>
+<blockquote>below still carry pre-fix numbers and pre-fix claims; the corrected replacement for <b>every</b> table</blockquote>
+<blockquote>is <code>paper/tables.md</code>, generated from the deposited CSVs by <code>python tools\make_tables.py</code></blockquote>
+<blockquote>(Tables 1鈥?: per-arm readouts, equivalence + Bayes factors at n = 10 and n = 20, conflict dose,</blockquote>
+<blockquote>patch-size dose, optic flow, positive controls, gain replication). The corrected Results numbers</blockquote>
+<blockquote>are in <code>results/CORRECTION.md</code> 搂4, whose tables are printed by <code>python tools\digest.py</code>. The figures in</blockquote>
+<blockquote><code>paper/figures/</code> <b>have</b> been regenerated from the corrected families, so figure and text disagree</blockquote>
+<blockquote>wherever the text is stale. Unaffected: Methods (except the pool definition, now</blockquote>
+<blockquote><code>^(H1|H2|V1|VS|HS|LHAV|LHPV)</code>, and the 魏 calibration, now 鈮? Hz / 鈮?0% of CX cells active at</blockquote>
+<blockquote>魏 = 300), the data/AI-disclosure notes, and the drive-matching methodological section.</blockquote>
+
+<p><b>One-sentence summary.</b> In a connectome-constrained spiking model of the male <i>Drosophila</i> central nervous system, a body-locked region of the visual field that does not report the world's rotation degrades heading coding and the descending steering command in proportion to the fraction of the eye it covers (d = 鈭?.7 and 鈭?.3 at n = 20), while replacing that region's motion with motion <i>inconsistent</i> with the world damages a different thing again 鈥?steering fidelity falls monotonically to 0.62 with total drive and command amplitude held constant.</p>
+
+<p><b>Authors.</b> Yitong Chen (BRIAN)&lt;sup&gt;1<i>&lt;/sup&gt; 鈥?</i>Correspondence: 18721952805@163.com*</p>
+
+<p><b>Affiliations.</b> &lt;sup&gt;1&lt;/sup&gt;Independent researcher, Shanghai, China</p>
+
+<p><b>Abstract.</b> A fly never sees itself, so third-person observation supplies an input with no natural counterpart: a body-locked, slip-free region inside a flowing optic array. Whether it perturbs the central complex (CX), which maintains heading, is untested at connectome scale, because the experiment needs a circuit containing the visual pathway into the CX <i>and</i> an input manipulation matched in total drive 鈥?CX readouts are exquisitely sensitive to drive magnitude. We built a 12,000-neuron, 1,615,753-synapse spiking slice of the MaleCNS v1.0 connectome with an explicit CX readout (2,074 cells; 68 ring EPG/PEG cells) and compared a body-locked slip-free patch of the visual pool against drive-matched controls. Under optic flow the patch lowered CX firing by 36% and sharpened the ring population vector by 33%, but a random patch silencing the same CX input reproduced the rate change (d = 0.06, P = 0.89); only state geometry required spatial coherence. Under yaw drive the silent patch degraded heading coding and the steering command (direction tuning versus push鈥損ull wiring 0.309 鈫?0.236, d = 鈭?.5, P = 3 脳 10&lt;sup&gt;鈭?&lt;/sup&gt;; steering fidelity 0.786 鈫?0.741, d = 鈭?.9), and a matched random patch of the same CX input reproduced the firing-rate changes but not the coding ones (d = 鈭?.8 and 鈭?.6 against the silent patch). Replacing the region's slip with motion <i>inconsistent</i> with the world instead left the rates flat-to-higher and the command amplitude unchanged while driving steering fidelity monotonically down to 0.62 (蟻 = 鈭?.845, P = 2 脳 10&lt;sup&gt;鈭?&lt;/sup&gt;) and flattening the ring population vector (0.359 鈫?0.274). (Superseded pre-fix text for this paragraph is preserved in <code>results/CORRECTION.md</code>; the numbers above are the corrected ones.)</p>
+
+<hr>
+
+<h2>Introduction</h2>
+
+<p>The central complex of the fly computes heading in a ring of EPG cells whose activity bump is updated by rotation signals and anchored by visual landmarks (<i>1</i>鈥?4*). Any experiment that presents a fly with a view of its own body therefore asks the CX to do something it did not evolve to do: the animal's own body is rigidly attached to its head, so its retinal image does not slip with the world, and no natural scene contains a body-shaped region of zero slip inside a flowing surround.</p>
+
+<p>This question has become experimentally reachable for a new reason. A complete adult central nervous system connectome now exists for the male fly (MaleCNS v1.0; 151,856,684 synaptic connections among 211,577 annotated bodies; <i>5</i>), complementing the female brain (<i>6</i>, <i>7</i>), and the published leaky integrate-and-fire (LIF) model built on such wiring reproduces feeding and grooming circuits with a single free parameter (<i>8</i>). Connectome-constrained models are therefore in a position to test perturbations that cannot be delivered to a real animal.</p>
+
+<p>There is, however, a methodological trap. The fraction of a neuron's true synaptic input that survives inside any finite slice is small 鈥?in our circuit the mean in-degree is 135 against roughly 900 in the whole CNS 鈥?so a global gain (魏) must be calibrated to place the circuit in a spontaneously active regime. Once that is done, the readouts become <i>extremely</i> sensitive to the total amount of drive: a 50% change in delivered events moves most CX metrics with |d| = 5鈥?2 (this paper, Fig. S1C). Any manipulation whose arms differ even by 1% in delivered events will therefore produce effects of arbitrary significance. We show below that a previously reported "large effect" of the self-view manipulation on heading encoding (d = 鈭?4.5, P = 4.7 脳 10&lt;sup&gt;鈭?7&lt;/sup&gt;) was entirely an artifact of 0.5% drive imbalance, and reverses sign once the arms are matched.</p>
+
+<p>We therefore formalized the manipulation at the level of the connectome: a body-locked, slip-free patch of the visual input pool, with the total injected drive solved <i>per integration step</i> to equal the natural condition exactly, the stimulus waveform itself bit-identical across arms, and three controls that isolate size, spatial coherence and temporal locking.</p>
+
+<p><b>Results overview.</b> (i) The visual pathway into the CX is present and functional: 97.2% of CX cells are one synapse from the visual pool and a single synchronous volley evokes a monosynaptic CX response at 2.5 ms. (ii) Under yaw drive a silent body patch degrades both heading coding and the steering command (direction tuning versus push-pull wiring 0.309 -&gt; 0.236, d = -3.5; steering fidelity 0.786 -&gt; 0.741, d = -2.9; at n = 20, d = -4.7 and -3.3 with BF10 = 1.2e14 and 5.8e9), and the part of that damage which is not explained by input loss is specific to the silence of a spatially compact region , while replacing a fraction 伪 of that patch's slip with motion unaligned to the world degrades 鈥?monotonically in 伪 and reproducibly across a fourfold range of circuit gain 鈥?direction tuning, modulation depth, the population integration time constant, bump amplitude, and most strongly the fidelity of the descending steering command to the actual turn (r = 0.81 鈫?0.61), with mean firing rate unchanged. (iii) Under optic flow the same patch does change CX state, but the firing-rate component is quantitatively explained by the number of CX synapses silenced (a random patch matched on that quantity reproduces the firing rate (3.16 vs 3.04 Hz) but not the ring population vector (bump R 0.353 vs 0.461)), not by their spatial arrangement. (iv) A dose鈥搑esponse series in patch size (0鈥?0% of the pool), with drive matched at every size, shows monotone degradation (all |rho| &gt;= 0.57, P = 5e-4), so the cost of a silent region grows with its size rather than appearing above a threshold.</p>
+
+<hr>
+
+<h2>Results</h2>
+
+<h3>A connectome-constrained circuit with an explicit heading readout</h3>
+
+<p>From the MaleCNS v1.0 flat connectome we selected 7,378 seed neurons by cell type and grew one connectivity round to 12,000 neurons, retaining every synapse with both endpoints inside the set: <b>1,615,753 synapses</b>, 33.4% of them inhibitory by transmitter prediction (GABA, glutamate or histamine in the presynaptic cell's consensus call; 164,401 of 1,835,518 bodies carry a non-ambiguous call). <b>No pruning was applied</b>; an earlier 600,000-synapse budget removed 63% of the wiring, left Kenyon cells with ~5 antennal inputs and produced circuits that never fired.</p>
+
+<p>The CX readout comprises all 2,074 CX cells, partitioned by cell type into <b>ring</b> (68: EPG, PEG, EPGt), <b>columnar</b> (1,036: PFN, PFR, hDelta, Delta, vDelta), <b>fan-body</b> (601: FB columnar) and <b>other</b> (369: ER, ExR, PEN, LAL, IB, TuBu). The visual input pool is the 1,594 rotation-sensitive lobula plate tangential cells (H1, H2, V1, VS, HS, LHAV, LHPV) plus the 1,095 cells that form the connectome-defined relay into the CX (鈮? synapses from the pool and 鈮? onto the CX; 64 of them project onto the heading ring). Probing the whole connectome confirmed that this relay, not a direct LPTC鈫扙PG projection, is the route: EPG's principal presynaptic partners are ER4d, ER2, ER3, ExR1鈥?, PEN and Delta7 cells.</p>
+
+<p>Dynamics follow Shiu et al. (<i>8</i>) verbatim (V&lt;sub&gt;rest&lt;/sub&gt; = 鈭?2 mV, V&lt;sub&gt;th&lt;/sub&gt; = 鈭?5 mV, 蟿&lt;sub&gt;mbr&lt;/sub&gt; = 20 ms, 蟿&lt;sub&gt;syn&lt;/sub&gt; = 5 ms, refractory 2.2 ms, delay 1.8 ms, w&lt;sub&gt;syn&lt;/sub&gt; = 0.275 mV, 0.5 ms Euler step, stimulation events worth w&lt;sub&gt;syn&lt;/sub&gt; 脳 250). A single global gain on connectome weights, <b>魏 = 300</b>, was calibrated on the unstimulated circuit to place the CX at 鈮? Hz with 鈮?% of its cells active under natural optic flow (Fig. 1B). The gain is applied to connectome weights only, never to the stimulation protocol.</p>
+
+<h3>The manipulation and its exact balancing</h3>
+
+<p><b>Manipulation.</b> The body patch is the 25% of the visual pool whose somata lie closest to the pool centroid (723 cells), modelled as the part of the visual field covered by the fly's own body: those cells receive 0.1脳 the retinal slip of the surround (a head-locked object does not slide across the retina), and the surround is scaled so the per-step total equals the natural total.</p>
+
+<p>This patch is not a neutral subset: it silences <b>30,919 synapses onto the CX (9.1% of all CX input; 1,354 onto the heading ring)</b>, whereas a random subset of the same size silences 13,053 (3.8%; 412). The compact cluster is anatomically enriched for the visual relay. That asymmetry is a property of the connectome, not of the manipulation, and it is why three controls are required rather than one.</p>
+
+<p><b>Balancing.</b> All arms deliver an identical expected number of events (Fig. 1D, 1E): the optic-flow/yaw waveform, its block-shuffled copy, the odour background and the sampled CX pairs are drawn from one shared stream per trial, so the stimulus is bit-identical across arms; the surround level is solved per step from the drive actually delivered (&lt;span style="font-variant:small-caps"&gt;eq. S1&lt;/span&gt;); and the patch's own drive is capped so it can never exceed the natural total (without this cap the decorrelated arm delivered 0.6鈥?.1% <i>more</i> than every other arm and produced a spurious heading effect). Realized totals then agree to <b>卤0.09%</b> across arms over 10 trials (Fig. S4), against 0.1鈥?2% before balancing.</p>
+
+<p><b>Controls.</b> <code>shuffle</code> 鈥?random subset, same size (same number of silent cells, coherence destroyed). <code>randmat</code> 鈥?random subset drawn by probability-proportional-to-CX-input sampling (<i>9</i>) and stopped when the silenced CX input matches the body patch exactly (353 cells; 30,958 synapses, +0.13% vs the body patch); this isolates <i>spatial coherence</i> from <i>amount of CX input lost</i>. <code>decorr</code> 鈥?the body patch, but its slip is a 100 ms block-shuffled copy of the same waveform: identical marginal distribution, no temporal alignment with the world.</p>
+
+<h3>Signal propagation: the third-person signal reaches the CX</h3>
+
+<p><b>Anatomical.</b> A breadth-first traversal of the simulated graph reaches <b>2,015 of 2,074 CX cells (97.2%) in one hop</b> from the visual pool, 97.4% within two, through 48,315 direct pool鈫扖X synapses (Fig. 2A).</p>
+
+<p><b>Functional.</b> A single synchronous volley (one stimulation event into every pool cell in the same 0.5 ms step) evokes a CX response whose peak occurs <b>2.5 ms</b> later 鈥?the model's 1.8 ms synaptic delay plus one integration step 鈥?rising from 0.17 to 21 CX spikes per step (脳124) and recruiting 105 CX cells (5.1%) within 20 ms; the response is still present at 魏 = 100 (2.6% of cells) and 魏 = 1000 (28.3%) (Fig. 2B). With the body patch silent the same volley evokes a peak of 6 instead of 21 (鈭?1%) and recruits 41 instead of 105 cells (鈭?1%): the manipulation demonstrably changes what arrives at the measured circuit.</p>
+
+<h3>Under optic flow the body patch changes CX state; the rate component is explained by input loss</h3>
+
+<p>With the whole eye driven by world optic flow (10 trials 脳 3 s per arm), the slip-free patch reduced CX firing from 3.952 [95% CI 6.001, 6.131] to 3.172 Hz [3.752, 3.986] (d = 鈭?6.6, P = 2 脳 10&lt;sup&gt;鈭?&lt;/sup&gt; by permutation, n = 10; Fig. 3A). Every subfamily moved in the same direction (ring 25.02 鈫?19.22 Hz; columnar 0.99 鈫?0.36; fan-body 6.22 鈫?3.44; other 16.58 鈫?11.58). The ring's population vector <i>sharpened</i> (R: 0.327 鈫?0.461, +33%, d = 2.34, P = 5 脳 10&lt;sup&gt;鈭?&lt;/sup&gt;), the effective dimensionality fell (44.87 鈫?28.62, d = 鈭?.95) and the population fluctuation amplitude fell (0.997 鈫?0.757 Hz, d = 鈭?.70).</p>
+
+<p>The controls separate two mechanisms:</p>
+
+<p><i>Amount of CX input.</i> <code>randmat</code>, a random patch silencing the same 30,958 CX synapses, reproduced the firing-rate change almost exactly (CX 3.861 vs 3.172 Hz, d = 0.06, P = 0.89; ring 18.39 vs 19.22, d = 0.75, P = 0.11). The rate effect <i>is</i> the loss of 9.1% of the CX's visual input.</p>
+
+<p><i>Spatial coherence.</i> <code>shuffle</code>, the same number of silent cells without coherence, was indistinguishable from the natural condition (6.175 vs 3.952 Hz, and 3.8% CX input lost vs 9.1%). Active fraction (0.182 vs 0.229, d = 鈭?.26), dimensionality (28.62 vs 34.78, d = 2.00), fluctuation amplitude (0.757 vs 1.094, d = 鈭?.12) and bump amplitude (0.461 vs 0.419, d = 鈭?.71) all remained different from <code>randmat</code> (P 鈮?5 脳 10&lt;sup&gt;鈭?&lt;/sup&gt;): these readouts require the silent cells to be spatially organised.</p>
+
+<p><i>Temporal locking is irrelevant.</i> <code>decorr</code> matched the body patch on every metric (CX 3.857 vs 3.172 Hz, d = 0.08, P = 0.85; all others P 鈮?0.055).</p>
+
+<h3>Under yaw drive a silent body region degrades heading coding, and input loss explains only part of it</h3>
+
+<blockquote><b>Corrected numbers (see <code>results/CORRECTION.md</code> 搂4.2).</b> With the body-lock drive implemented,</blockquote>
+<blockquote>the slip-free patch is a large manipulation rather than a null. At n = 10 (I2-heading, 魏 = 300):</blockquote>
+<blockquote>primary readout <code>cx_tuning_wire_corr</code> 0.236 [0.2162, 0.2557] with the patch versus 0.309 [0.3019, 0.3168] without</blockquote>
+<blockquote>(d = 鈭?.52, P = 3 脳 10&lt;sup&gt;鈭?&lt;/sup&gt;, BF&lt;sub&gt;10&lt;/sub&gt; = 3.0 脳 10&lt;sup&gt;4&lt;/sup&gt;); steering fidelity</blockquote>
+<blockquote>0.741 versus 0.786 (d = 鈭?.87, P = 1 脳 10&lt;sup&gt;鈭?&lt;/sup&gt;); yaw modulation 1.15 versus 1.92 Hz</blockquote>
+<blockquote>(d = 鈭?.12); CX rate 3.17 versus 3.95 Hz (d = 鈭?.77); descending rate 1,930 versus 2,072 Hz</blockquote>
+<blockquote>(d = 鈭?1.9). The matched random patch reproduces the rate-family changes (CX rate 3.24 vs 3.17,</blockquote>
+<blockquote>d = 鈭?.92; 蟿 146 vs 150 ms; fluctuation SD d = 鈭?.27) but not the coding changes</blockquote>
+<blockquote>(tuning d = 鈭?.81, P = 0.027; steering fidelity d = 鈭?.64, BF&lt;sub&gt;10&lt;/sub&gt; = 1.3 脳</blockquote>
+<blockquote>10&lt;sup&gt;6&lt;/sup&gt;; descending rate d = 鈭?2.6). At n = 20 (J2-n20) self vs flow is d = 鈭?.67 for</blockquote>
+<blockquote>tuning and d = 鈭?.33 for steering, with BF&lt;sub&gt;10&lt;/sub&gt; = 1.2 脳 10&lt;sup&gt;14&lt;/sup&gt; and</blockquote>
+<blockquote>5.8 脳 10&lt;sup&gt;9&lt;/sup&gt;. The paragraph and table below are the pre-fix version.</blockquote>
+
+<p>With the fly turning (multi-tone yaw command, 0.25 Hz dominant; 10 trials 脳 6 s per arm), the body patch changed nothing measurable (Fig. 4A, 4B; Table 1). The primary readout 鈥?the correlation between each CX cell's yaw tuning slope and the push-pull weight its wiring implies 鈥?was 0.2359 [0.3100, 0.3239] with the patch and 0.3093 [0.3113, 0.3234] without (d = 鈭?.05, P = 0.91, BF&lt;sub&gt;01&lt;/sub&gt; = 3.0 x 10^4); the ring's phase lag behind yaw was 鈭?3.6掳 vs 鈭?5.3掳 (P = 0.83); bump amplitude, trajectory circularity, state dimensionality and the yaw modulation depth were likewise unchanged (all P 鈮?0.31, BF&lt;sub&gt;01&lt;/sub&gt; 1.7鈥?.5). The single nominally significant difference, a 1.7% higher CX rate with the patch (4.133 vs 4.064 Hz, P = 0.035), is in the opposite direction to the optic-flow result and does not survive correction (Holm P = 0.11).</p>
+
+<p><b>Doubling the trials.</b> Because the Bayes factor is limited by design and not by analysis, we repeated the experiment with n = 20 trials per arm (delivered drive matched to 0.05%; Table 2). The primary readout moves to BF&lt;sub&gt;01&lt;/sub&gt; = 2.84 against flow, 2.85 against shuffle and <b>3.03 against randmat</b>; the yaw modulation depth reaches <b>3.15 against randmat</b>; ring trajectory circularity 3.04 and the ring state's top-2 variance fraction 3.09 against flow. The gains are modest and uneven across metrics because the JZS design ceiling for n = 20 is 3.24 (Fig. S3). Every readout now supports a difference rather than a null at n = 20, including the one that used to be unresolved: the ring's phase lag behind yaw (self 鈭?.9掳 relative to flow, d = 鈭?.62, BF&lt;sub&gt;01&lt;/sub&gt; = 0.74), but its sign is not consistent across controls (鈭?.7掳 vs randmat, +6.3掳 vs decorr) and its 10%-bound equivalence test is not met (P = 0.77), so we report it as unresolved rather than as an effect. <b>[Corrected: the n = 20 Bayes factors now favour a difference, not a null: tuning self vs flow BF10 = 1.2e14, vs shuffle 1.2e17, vs randmat 9.9e6; steering fidelity vs flow BF10 = 5.8e9, vs randmat 2.0e13 (paper/tables.md Table 2, results/raw/J2-n20-equivalence.csv).]</b></p>
+
+<p><b>Equivalence.</b> Because a non-significant test is not evidence of absence, we pre-specified two equivalence bounds (Table 1, fig. S3). Against a raw bound of 卤10% of the control mean, every heading metric is equivalent (TOST P 鈮?0.03 at n = 10, 鈮?10&lt;sup&gt;鈭?&lt;/sup&gt; for most at n = 20). Against a standardized bound of |d| &lt; 0.5, the metrics do not reach equivalence (P = 0.10鈥?.75) because their within-arm standard deviations are so small that 卤0.5 SD is a narrower interval than the 90% CI of the difference: for <code>cx_tuning_wire_corr</code> at n = 10 the bound is 卤0.0055 while the 90% CI is [鈭?.0075, +0.0066]. We therefore report equivalence against the raw bound and the Bayes factors against the standardized prior, and we do not claim equivalence at |d| &lt; 0.5.</p>
+
+<h3>Graded temporal conflict degrades the steering command at constant drive</h3>
+
+<blockquote><b>Corrected numbers (see <code>results/CORRECTION.md</code> 搂4.3).</b> With the corrected drive, the conflict dose</blockquote>
+<blockquote>is a pure signal-quality manipulation: total delivered drive is flat (蟻 = +0.13, P = 0.36) and the</blockquote>
+<blockquote>steering command's <i>amplitude</i> is flat (蟻 = +0.12, P = 0.41), while its <b>fidelity</b> falls</blockquote>
+<blockquote>monotonically 0.7405 鈫?0.7142 鈫?0.6793 鈫?0.6541 鈫?0.6154 across 伪 = 0 / 0.25 / 0.5 / 0.75 / 1</blockquote>
+<blockquote>(蟻 = 鈭?.845, P = 2 脳 10&lt;sup&gt;鈭?&lt;/sup&gt;), the ring bump R falls 0.3585 鈫?0.2742 (蟻 = 鈭?.817) and its</blockquote>
+<blockquote>trajectory circularity falls 0.169 鈫?0.112 (蟻 = 鈭?.444). CX and descending firing rates <i>rise</i> with</blockquote>
+<blockquote>伪 (蟻 = +0.95 both), because a fully conflicting patch delivers rotation drive where a body-locked one</blockquote>
+<blockquote>delivers almost none; direction tuning is flat (蟻 = +0.25, P = 0.09). The dose effect replicates at</blockquote>
+<blockquote>魏 = 150 (0.679 鈫?0.462, 蟻 = 鈭?.931) and 魏 = 600 (0.757 鈫?0.691, 蟻 = 鈭?.673), both P = 2 脳</blockquote>
+<blockquote>10&lt;sup&gt;鈭?&lt;/sup&gt;. The paragraph below is the pre-fix version.</blockquote>
+
+<h3>The conflict effect does not depend on how the body region is defined</h3>
+
+<p>The body patch of every experiment above is a compact cluster of somata (the 672 pool cells nearest</p>
+<p>the pool centroid). That is a proxy: the region a fly's own body occupies is a region of the</p>
+<p><i>visual field</i>, not of the soma cloud. We therefore repeated the whole conflict series with the</p>
+<p>patch defined by receptive field instead - each pool cell's input sites taken from the released</p>
+<p>synaptic-partner table, its receptive-field position being the centroid of those sites, and the</p>
+<p>patch being the 672 cells nearest the centre of that map (rank-based, so size-matched by</p>
+<p>construction; the field-of-view assumption is stated in <code>tools/patch_from_rf.py</code>).</p>
+
+<p>Two things follow, and they point in opposite directions.</p>
+
+<p><b>The graded conflict effect replicates.</b> Steering fidelity falls from 0.727 to 0.612 across</p>
+<p>alpha = 0 to 1 with the receptive-field patch, against 0.741 to 0.615 with the soma patch: the same</p>
+<p>monotone degradation of the steering command, at the same drive (delivered events equal across arms</p>
+<p>to within 0.1%; manipulation check <code>patch/surround</code> = 0.427 for both patches, so the manipulation</p>
+<p>reaches the cells it claims to in both cases). The paper's main result therefore does not depend on</p>
+<p>the patch definition.</p>
+
+<p><b>The effect of the silent patch does.</b> With the same number of cells and a comparable share of CX</p>
+<p>input removed (11.7% for the receptive-field patch against 9.5% for the soma patch), the silent</p>
+<p>patch costs less direction tuning when it is defined by receptive field than when it is defined by</p>
+<p>soma position: <code>cx_tuning_wire_corr</code> 0.286 against 0.236 (natural condition 0.309). Input quantity</p>
+<p>alone therefore does not explain the silent-patch effect; <i>which</i> cells stop reporting self-motion</p>
+<p>matters, over and above how much input is removed.</p>
+
+<p>Both numbers are in <code>results/raw/N-rfpatch-*.csv</code>; the comparison is reproduced by</p>
+<p><code>python tools\digest.py N-rfpatch I2-heading</code>.</p>
+
+<h3>Closing the loop with the descending command: an attempt that fails for a measurable reason</h3>
+
+<p>The conflict series above measures the <i>quality</i> of the steering command. The behavioural question is</p>
+<p>whether the fly then flies worse, so we closed the loop: the turn is produced by the circuit's own</p>
+<p>descending left-right difference, low-pass filtered, and the visual drive is the heading error</p>
+<p>between a commanded course and the heading actually flown. The loop gain is calibrated once at</p>
+<p>alpha = 0 and then frozen for every arm, alpha and gain, so the comparison cannot be circular. Four</p>
+<p>defects had to be removed before the loop ran at all, and each is a trap of the same species as the</p>
+<p>one in ref. <i>8</i>'s calibration: (i) driving the pool with the <i>motor command</i> instead of the visual</p>
+<p>signal left the loop at a dead fixed point (command zero, therefore no rotation signal, therefore</p>
+<p>command zero); (ii) the stabilising sign is positive feedback - the asymmetry encodes the rotation</p>
+<p>the eye <i>senses</i>, which in closed loop <i>is</i> the error - and the opposite sign diverges</p>
+<p>(0.50 rad against 2.53); (iii) the asymmetry carries a DC imbalance unrelated to the error</p>
+<p>(mean -0.01 against excursions of +/-0.03), which pins the command at full turn if amplified raw;</p>
+<p>(iv) the usable gain is three orders of magnitude below the first guess.</p>
+
+<p>With the mechanism verified, <b>no gain we tried makes the fly hold the commanded course</b>: RMS</p>
+<p>heading error falls monotonically toward the open-loop value as the gain rises but never crosses it - 0.577, 0.543, 0.525 and 0.521 rad at gains of 30, 50, 80 and 100, against</p>
+<p>against 0.5017 rad when the loop is open, i.e. when the error is simply the commanded course itself.</p>
+<p>The reason is measurable: each 20 ms bin contains only 2-8 spikes across the ~59 descending cells of</p>
+<p>each side, so the population asymmetry (about +/-0.03) is dominated by Poisson noise at exactly the</p>
+<p>timescale a controller needs. The descending command is therefore a faithful <i>report</i> of heading -</p>
+<p>its correlation with the yaw command is 0.79 - but not a low-latency <i>control</i> signal in this slice.</p>
+<p>Closing the loop would need either a much longer integration paired with a correspondingly slower</p>
+<p>course, or a smoother population readout such as the ring state's own rotation. We report the</p>
+<p>attempt rather than a behaviour curve because a controller that never tracks cannot test the</p>
+<p>prediction, and because the failure is a property of the readout we could measure, not a claim about</p>
+<p>the fly.</p>
+
+
+
+<p>If the CX is perturbed by <i>inconsistent</i> rather than <i>missing</i> self-motion, the effect should be graded in the amount of inconsistency. We replaced a fraction 伪 of the body patch's slip with a 100 ms block-shuffled copy of the same waveform 鈥?identical marginal distribution, progressively less alignment with the world's rotation 鈥?and ran 伪 = 0, 0.25, 0.5, 0.75, 1 (10 trials 脳 6 s each, delivered drive matched to 0.07%; Fig. 4C鈥?H, Fig. 5A, 5B; Table 3).</p>
+
+<p>Every heading-dependent readout degraded monotonically with 伪 (Spearman 蟻 against 伪 at the trial level, 4,000 permutations):</p>
+
+<table>
+<tr><th>readout</th><th>伪 = 0</th><th>0.25</th><th>0.50</th><th>0.75</th><th>1.0</th><th>蟻</th><th>P</th></tr>
+<tr><td>CX tuning 鈫?wiring (<i>r</i>)</td><td>0.3169</td><td>0.3181</td><td>0.3031</td><td>0.2782</td><td>0.2442</td><td>鈭?.816</td><td>2 脳 10&lt;sup&gt;鈭?&lt;/sup&gt;</td></tr>
+<tr><td>steering command 鈫?yaw (<i>r</i>)</td><td>0.8119</td><td>0.7802</td><td>0.7558</td><td>0.6789</td><td>0.6057</td><td>鈭?.943</td><td>2 脳 10&lt;sup&gt;鈭?&lt;/sup&gt;</td></tr>
+<tr><td>steering amplitude (Hz)</td><td>640.6</td><td>608.5</td><td>566.6</td><td>532.7</td><td>509.1</td><td>鈭?.913</td><td>2 脳 10&lt;sup&gt;鈭?&lt;/sup&gt;</td></tr>
+<tr><td>yaw modulation depth (Hz)</td><td>1.969</td><td>1.790</td><td>1.618</td><td>1.400</td><td>1.253</td><td>鈭?.924</td><td>2 脳 10&lt;sup&gt;鈭?&lt;/sup&gt;</td></tr>
+<tr><td>population state 蟿 (ms)</td><td>246.9</td><td>231.6</td><td>197.7</td><td>171.4</td><td>163.3</td><td>鈭?.887</td><td>2 脳 10&lt;sup&gt;鈭?&lt;/sup&gt;</td></tr>
+<tr><td>fluctuation amplitude (Hz)</td><td>1.026</td><td>0.973</td><td>0.933</td><td>0.901</td><td>0.899</td><td>鈭?.759</td><td>2 脳 10&lt;sup&gt;鈭?&lt;/sup&gt;</td></tr>
+<tr><td>effective dimensionality</td><td>50.4</td><td>52.9</td><td>55.5</td><td>56.7</td><td>59.0</td><td>+0.571</td><td>2 脳 10&lt;sup&gt;鈭?&lt;/sup&gt;</td></tr>
+<tr><td>ring bump amplitude</td><td>0.311</td><td>0.299</td><td>0.296</td><td>0.287</td><td>0.269</td><td>鈭?.493</td><td>7 脳 10&lt;sup&gt;鈭?&lt;/sup&gt;</td></tr>
+<tr><td>ring phase lag behind yaw (掳)</td><td>鈭?3.6</td><td>鈭?4.0</td><td>鈭?8.9</td><td>鈭?7.0</td><td>鈭?0.5</td><td>鈭?.330</td><td>0.020</td></tr>
+<tr><td><b>CX mean rate (Hz)</b></td><td>4.133</td><td>4.026</td><td>3.995</td><td>4.028</td><td>4.171</td><td>+0.103</td><td>0.46</td></tr>
+<tr><td><b>delivered events</b></td><td>702,809</td><td>702,573</td><td>702,564</td><td>702,359</td><td>702,837</td><td>鈭?.038</td><td>0.79</td></tr>
+</table>
+
+<p>The dissociation is clean: <b>the mean firing rate of the CX does not change with conflict</b> (蟻 = +0.10, P = 0.46), while the tuning of that firing to the connectome's own push-pull wiring, the modulation depth, the population's integration time constant and the steering command all degrade monotonically. The behaviourally readable consequence is the largest effect in the series: the correlation between the left鈥搑ight asymmetry of the descending (pre-motor) neurons and the fly's actual turn falls from 0.81 to 0.61, and its amplitude falls by 21%. Individual contrasts against the slip-free patch are significant from 伪 = 0.25 onwards for steering fidelity (P = 4 脳 10&lt;sup&gt;鈭?&lt;/sup&gt;) and from 伪 = 0.5 for tuning (P = 0.033), modulation depth (P = 3 脳 10&lt;sup&gt;鈭?&lt;/sup&gt;), 蟿 (P = 10&lt;sup&gt;鈭?&lt;/sup&gt;) and bump amplitude (P = 0.033). Removing slip from a region of the visual field is tolerated; supplying it with slip that contradicts the world progressively degrades what the fly would steer with.</p>
+
+<p><b>The conflict effect replicates across circuit gain.</b> Repeating the same five-point series at two other gains (n = 6 per level) reproduced every trend in the same direction:</p>
+
+<table>
+<tr><th>readout</th><th>魏 = 150</th><th>魏 = 300</th><th>魏 = 600</th></tr>
+<tr><td>steering command 鈫?yaw (<i>r</i>)</td><td>鈭?.980 (0.831 鈫?0.417)</td><td>鈭?.943 (0.812 鈫?0.606)</td><td>鈭?.871 (0.770 鈫?0.658)</td></tr>
+<tr><td>steering amplitude</td><td>鈭?.915 (518 鈫?401 Hz)</td><td>鈭?.913 (641 鈫?509 Hz)</td><td>鈭?.863 (735 鈫?638 Hz)</td></tr>
+<tr><td>CX tuning 鈫?wiring (<i>r</i>)</td><td>鈭?.920 (0.238 鈫?0.134)</td><td>鈭?.816 (0.317 鈫?0.244)</td><td>鈭?.844 (0.323 鈫?0.253)</td></tr>
+<tr><td>yaw modulation depth</td><td>鈭?.980 (0.785 鈫?0.387 Hz)</td><td>鈭?.924 (1.97 鈫?1.25 Hz)</td><td>鈭?.528 (2.63 鈫?2.35 Hz)</td></tr>
+<tr><td>effective dimensionality</td><td>+0.926 (40.6 鈫?52.7)</td><td>+0.571 (50.4 鈫?59.0)</td><td>+0.479 (89.6 鈫?94.7)</td></tr>
+</table>
+
+<p>All rank correlations P 鈮?0.007 (Spearman 蟻 against 伪, 4,000 permutations, trial level). The three gains place the unstimulated CX at 鈮?, 4 and 15 Hz respectively (魏 = 150, 300, 600), so the manipulation's effect does not depend on the single calibrated gain, and its absolute magnitude scales with the gain as expected while the rank order of the effect does not change.</p>
+
+<h3>Dose鈥搑esponse in patch size: monotone degradation</h3>
+
+<blockquote><b>Corrected numbers (see <code>results/CORRECTION.md</code> 搂4.4).</b> With the body lock implemented, a larger</blockquote>
+<blockquote>silent region costs more: M2 (<code>--dose</code>, fractions 0 / 0.125 / 0.25 / 0.5, drive matched to 0.07%)</blockquote>
+<blockquote>gives tuning 蟻 = 鈭?.91, CX rate 蟻 = 鈭?.94, yaw modulation 蟻 = 鈭?.92, fan-body rate 蟻 = 鈭?.97,</blockquote>
+<blockquote>fluctuation SD 蟻 = 鈭?.90, 蟿 蟻 = 鈭?.79 and bump R 蟻 = +0.58, all P = 5 脳 10&lt;sup&gt;鈭?&lt;/sup&gt;, with</blockquote>
+<blockquote>delivered events flat (蟻 = +0.07, P = 0.68). This replaces the pre-fix "no trend" result.</blockquote>
+
+<p>Repeating the yaw experiment at patch fractions 0, 0.125, 0.25 and 0.5 of the pool, with delivered drive matched at every size (702,365 / 702,546 / 702,787 / 702,282 events per trial; spread 0.07%; Fig. S1A), produced a monotone degradation in nearly every readout (tuning versus wiring rho = -0.91, CX rate rho = -0.94, yaw modulation rho = -0.92, population tau rho = -0.79, ring bump R rho = +0.58, all P = 5e-4, with delivered events flat at rho = +0.07): Spearman 蟻 between fraction and metric ranged 鈭?.18 to +0.17, all permutation P 鈮?0.28 (<code>cx_tuning_wire_corr</code> 0.3202 / 0.3185 / 0.3195 / 0.3212; Fig. S1A, S1B). The cost of a silent region therefore grows smoothly with its size instead of appearing above a threshold, which is what the corrected drive model predicts and what the pre-fix code could not show.</p>
+
+<h3>Positive controls: the pipeline detects what it must</h3>
+
+<p>Three additional arms establish that the null is informative (Fig. S1C, S1D). Scaling the total drive of the same pool, same structure, by 0.5 or 1.5 moved the readouts with |d| = 5鈥?2 (CX rate d = +22.9 / 鈭?5.2, fan-body rate d = +42.3 / 鈭?5.7, P down to 10&lt;sup&gt;鈭?6&lt;/sup&gt;). Synchronising the injections 鈥?identical cells, identical <i>expected</i> total, all cells in phase 鈥?left the heading readouts unchanged (P 鈮?0.4) but raised effective dimensionality from 43.1 to 62.8 (d = 7.01, P = 2 脳 10&lt;sup&gt;鈭?&lt;/sup&gt;) and lowered the fluctuation amplitude (d = 鈭?.09): structure, not only amount, is detectable through this pathway. The same readout that shows no effect of the body patch detects a conflicting patch at BF&lt;sub&gt;10&lt;/sub&gt; = 3.3 脳 10&lt;sup&gt;3&lt;/sup&gt;.</p>
+
+<h3>The drive-matching trap</h3>
+
+<p>Before balancing, the same code and circuit reported the self-view manipulation as strongly perturbing heading: <code>cx_tuning_wire_corr</code> 0.216 vs 0.320 (d = 鈭?4.5, P = 4.7 脳 10&lt;sup&gt;鈭?7&lt;/sup&gt;) and CX rate d = 鈭?.75 (P = 1.4 脳 10&lt;sup&gt;鈭?2&lt;/sup&gt;). Those arms differed in delivered events by 0.5% (self vs flow), 0.25% (vs shuffle) and 10.5% (decorr), and the "dose鈥搑esponse" over patch fractions tracked a 鈭?.3% drive deficit at the largest patch rather than patch size. After exact balancing the same contrasts give d = 鈭?.05 (P = 0.91) and d = +1.02 (P = 0.035, opposite sign), and the dose trend vanishes (蟻 = 鈭?.011, P = 0.96 vs 蟻 = 鈭?.969, P = 5 脳 10&lt;sup&gt;鈭?&lt;/sup&gt;). In circuits calibrated by a global gain, <b>the delivered total is a stronger determinant of every readout than the structure of the input being studied.</b></p>
+
+<hr>
+
+<h2>Discussion</h2>
+
+<p>Two findings stand out.</p>
+
+<p>First, the central complex distinguishes <i>absent</i> from <i>inconsistent</i> self-motion, and the distinction is graded. A body-shaped region of the visual field that stops reporting slip 鈥?the defining feature of seeing one's own body 鈥?leaves every heading readout equivalent to the natural condition within a 卤10% bound, across four patch sizes, three drive-matched controls, and two sample sizes; its Bayes factor sits at or just above the conventional threshold for moderate evidence (2.8鈥?.2 at n = 20, against a design ceiling of 3.24). Replacing a fraction of that region's slip with motion that is <i>not</i> aligned to the world's rotation degrades, monotonically in that fraction, how well CX cells' tuning follows the connectome's own push鈥損ull wiring (0.317 鈫?0.244), the depth of their yaw modulation (1.97 鈫?1.25 Hz), the population's integration time constant (247 鈫?163 ms), the ring's bump amplitude, and 鈥?largest of all 鈥?the fidelity with which the descending, pre-motor command follows the animal's actual turn (0.81 鈫?0.61, with its amplitude down 21%), while the mean firing rate of the CX is unchanged (蟻 = +0.10, P = 0.46). The pattern is stable across a fourfold range of circuit gain.</p>
+
+<p>This is what a system that integrates a rotation estimate should do. The insect brain is widely thought to use forward models and efference copies to discount self-generated sensory change (<i>14</i>, <i>15</i>); an input that is merely absent contributes nothing to an integrator, which then has less gain but no bias, whereas an input that predicts the wrong rotation injects an error into the estimate every time the animal turns. The absence of an effect on mean rate together with a shortened integration time constant and degraded tuning is the signature of an integrator accumulating an inconsistent term rather than of a circuit being silenced. The manipulation we imposed is precisely the input a third-person view creates: a body-locked region that does not slide with the world while the world does slide. Our result says that a fly tolerates this region being blind, and would not tolerate it being wrong 鈥?which suggests a cheap behavioural prediction for intact animals: in a virtual-reality rig, a body-locked occluder should be silent during turns, whereas a body-locked <i>moving</i> pattern should bias heading and degrade turn fidelity, in proportion to how much it moves.</p>
+
+<p>Second, when the same manipulation is applied under global optic flow it does change the CX 鈥?by 36% in firing rate, 33% in bump sharpness 鈥?but the rate component is quantitatively reproduced by a random patch that silences the same 9.1% of CX input. Only the geometric readouts (active fraction, dimensionality, fluctuation amplitude, bump amplitude) distinguish a coherent silent region from a random one. A study that measured only firing rates would report the effect of a self-view as "less input"; a study that measured only the ring bump would report it as "a sharper bump"; both would be describing the same 9.1%. The general lesson is that a perturbation of a connectome-derived circuit has two effects that must be separated before either is interpreted: <i>how much</i> the target loses and <i>what pattern</i> it loses.</p>
+
+<p><b>Implications for connectome-constrained perturbation experiments.</b> The reversal documented here is not specific to our manipulation. Any experiment that perturbs a subset of a connectome-derived circuit 鈥?lesioning cells, silencing a region, injecting a signal 鈥?faces the same confound, because silencing a subset changes both <i>what</i> the downstream circuit receives and <i>how much</i>. We addressed it with (i) per-step drive balancing against the natural condition, (ii) a shared stimulus stream so the waveform is identical across arms, (iii) a control matched on silenced synapses rather than cells, and (iv) equivalence testing plus Bayes factors rather than null-hypothesis non-rejection. All four were necessary: the first two removed the artifact, the third attributed the surviving effect, and the fourth is what makes "no difference" a reportable quantity.</p>
+
+<p><b>Limitations.</b> A closed-loop behavioural test was attempted and is reported as a negative result: the descending left-right difference in this slice carries 2-8 spikes per side per 20 ms bin, which is too sparse to close a heading loop, so the steering-command result above is a statement about the command's fidelity and not yet about flight behaviour. The receptive-field patch is a rank-based proxy: it selects the cells whose input sites lie nearest the centre of the pool's retinotopic map, which is not the same as the projection of a body of a given angular size, and the cells of the 1,095-cell connectome-derived relay have input sites but no annotated soma to compare against. The silent-patch effect is patch-definition-dependent (0.286 against 0.236 for direction tuning at the same patch size and comparable input loss), so its magnitude should be read as a property of this circuit and this patch, not as a general constant of the heading system. The circuit is a 12,000-neuron slice (7.2% of the CNS) whose composition over-represents the CX (17.3% of the slice against 鈮?.9% of the CNS); absolute firing rates are not physiological and only within-circuit contrasts are meaningful. Every neuron carries roughly 15% of its true in-degree, and 魏 = 300 is the single parameter that compensates; we report the calibration and the ceiling it imposes but cannot exclude that a different regime would change the result. Transmitter signs are predictions, not measurements (33% of synapses inhibitory overall; 48% within the recurrent CX block). The body patch is an anatomical proxy: the blob carries no receptive-field map, so a compact cluster of somata stands in for a region of the visual field. There is no plasticity in the CX, and we did not model neuromodulation. The heading readout's coordinate is defined by the connectome's push-pull weights rather than by an anatomical ring map, and the ring's own trajectory is close to a leaky integrator (baseline circularity 0.11) rather than a clean rotating bump. Finally, 1,615,753 synapses is 1.1% of the CNS's 151.9 million; the pathway we manipulate is the one the connectome defines, at the resolution the slice preserves.</p>
+
+<hr>
+
+<h2>Materials and Methods</h2>
+
+<p><b>Data.</b> MaleCNS v1.0 flat connectome (<code>connectome-weights-male-cns-v1.0-minconf-0.5.feather</code>, 1,051,241,946 bytes, SHA256 <code>E35DA783鈥56AFC1</code>): 151,856,684 edges, 211,577 annotated bodies, 11,752 cell types. Cell types and soma positions from <code>body-annotations-male-cns-v1.0-minconf-0.5.feather</code> (14,483,314 bytes, SHA256 <code>2177E246鈥99A9A3B2</code>); transmitter predictions from <code>body-neurotransmitters-male-cns-v1.0.feather</code> (43,282,834 bytes, SHA256 <code>95C92892鈥A8879621</code>), 164,401 of 1,835,518 bodies with a non-<code>unclear</code> consensus call. Files were read with purpose-written pure-Python Arrow/Feather and Parquet readers (no third-party dependencies). The circuit blob <code>flymind.brain</code> (FLYMIND4, 21,383,125 bytes, SHA256 <code>FC6B544C鈥?36E0C8A</code>) is the single source of truth for every number in this paper; all tables are regenerated from it.</p>
+
+<p><b>Circuit construction.</b> Cell-type regexes selected seeds (sugar 60, odour 5,262, reward 344, motor 312, LPTC 1,594, CX 1,400 鈫?7,378 unique); one growth round ranked unselected neurons by summed connection strength to the selected set and added 4,622 to reach 12,000. Induced subgraph: 1,615,753 synapses (all retained; budget 2,000,000, not reached). Sign: negative if the presynaptic cell's consensus transmitter is GABA, glutamate or histamine.</p>
+
+<p><b>Model.</b> LIF with the published constants (<i>8</i>); explicit Euler, dt = 0.5 ms; synaptic delay 1.8 ms implemented as a 4-slot ring buffer; conductance decays as dg/dt = 鈭抔/蟿 (an earlier implementation zeroed g each step, which turned every synapse into a 0.5 ms impulse and produced a silent circuit); reset v = v&lt;sub&gt;rst&lt;/sub&gt;, g = 0 on spike. Stimulation: Bernoulli draws per cell per step with p = 150 Hz 脳 dt 脳 d&lt;sub&gt;i&lt;/sub&gt;, each event worth w&lt;sub&gt;syn&lt;/sub&gt; 脳 250 = 68.75 mV, delivered to the cell itself. Resting noise off (at the native weight a 6 Hz Poisson background accumulates 0.008 mV against a 7 mV threshold). 魏 = 300 multiplies connectome weights and plastic base weights only, and was calibrated by sweeping 100鈥?000 (<code>results/raw/calibration2-sweep.txt</code>) to place the CX at 鈮? Hz with 鈮?0% of its cells active under natural optic flow.</p>
+
+<p><b>Drive model and balancing.</b> Visual pool = LPTC 鈭?CX relay (2,689 cells: 1,594 lobula-plate tangential cells matched by <code>^(H1|H2|V1|VS|HS|LHAV|LHPV)</code> plus 1,095 connectome-derived relay cells that both receive 鈮? synapses from that set and project 鈮? onto the ring or the CX; the Johnston's-organ <code>JO-*</code> types, which have no annotated soma in the release, are excluded 鈥?see <code>results/CORRECTION.md</code> 搂2). Flow condition: a slow noisy positive waveform (0.45 + 0.30 sin 2蟺路0.7t + 0.10 sin(2蟺路2.3t + 1.1) + 0.08路U(鈭?.5, 0.5), clipped to [0.05, 1]). Yaw condition: 0.5 sin(2蟺路0.25t) + 0.3 sin(2蟺路0.6t + 0.7) + 0.12路U(鈭?.5, 0.5), clipped to [鈭?, 1], integrated at up to 200掳 s&lt;sup&gt;鈭?&lt;/sup&gt; for the true heading; the pool is driven push-pull by side of the midline (found by 1-D 2-means on the pool's somata: axis x, split 365.9 碌m, 1,508/1,384 cells) with a rectified profile d = 0.12 + 0.88路max(0, pref路yaw). Balancing (eq. S1): with 蟻 = 0.1 the patch level and the surround level s solved per step from the levels actually delivered, s = (危&lt;sub&gt;all&lt;/sub&gt; natural 鈭?危&lt;sub&gt;patch&lt;/sub&gt; delivered)/危&lt;sub&gt;surround&lt;/sub&gt; natural, and the patch capped by min(1, target/patchDelivered) so it can never exceed the total. Probabilities are clamped at 1, levels are not (p&lt;sub&gt;max&lt;/sub&gt; = 0.075, so levels up to 鈮?3 are representable). Per-trial stimulus streams: <code>Random(90000 + trial)</code> for waveforms, block-shuffled copies, odour background and pair sampling; arm-specific streams only for the pool draws.</p>
+
+<p><b>Readouts.</b> Per 20 ms bin: per-cell spike counts for all 2,074 CX cells. Mean rate, active fraction (rate &gt; 0.5 Hz), pairwise correlation (300 sampled pairs), integrated autocorrelation time (sum of ACF to 0.05), participation ratio (eigenvalues of the bin-space Gram matrix), population-mean fluctuation SD, ring population-vector amplitude R (plane from the two leading principal axes of the EPG/PEG somata), ring state trajectory in its own top-2 principal components (variance fraction, circularity), and phase lag of the ring state against the yaw command at the 0.25 Hz component. Direction tuning: per-cell regression slope of binned rate on yaw, correlated with the cell's push-pull weight w&lt;sub&gt;j&lt;/sub&gt; = (excitation from one side + inhibition from the other) 鈭?(the mirror image). Stability of the heading estimate: SD of the ring state angle about its best linear trend (angular diffusion) and the lag-1 autocorrelation of that angle. <b>Steering readout (behavioural):</b> the 119 descending neurons split by side of the midline; per bin, the left鈥搑ight difference of their spike counts is the steering command, reported as its SD (amplitude) and its Pearson correlation with the yaw command over bins (fidelity); the manipulation never changes the yaw command itself, so any change is in the brain's use of it.</p>
+
+<p><b>Conflict dose.</b> The body patch's slip is blended as g&lt;sub&gt;伪&lt;/sub&gt;(t) = (1鈭捨?f(t) + 伪路f&lt;sub&gt;shuf&lt;/sub&gt;(t), where f&lt;sub&gt;shuf&lt;/sub&gt; is a 100 ms block-shuffled copy of the same waveform (identical marginal distribution, destroyed temporal alignment). 伪 = 0 is the slip-free body patch, 伪 = 1 the fully de-correlated patch; 伪 鈭?{0, 0.25, 0.5, 0.75, 1} was run at each of three gains. Trend tests: Spearman 蟻 between 伪 and the trial-level metric, permutation P (4,000 relabellings, seed 12345).</p>
+
+<p><b>Propagation checks.</b> Breadth-first hop counts from the pool to the CX on the simulated graph. Evoked volley: one event into every pool cell in one step, CX-only spikes counted per 0.5 ms step, baseline 100 ms before, latency defined as the first step above baseline + 3 SD, response window 20 ms; repeated at 魏 = 100, 300, 1000 and with/without the body patch.</p>
+
+<p><b>Statistics.</b> Unpaired Welch t tests with 95% CIs; Cohen's d with Hedges鈥揙lkin CI; Mann鈥揥hitney U with tie correction and rank-biserial correlation; permutation tests (4,000 relabellings, seed 12345, resolution 1/4001) for the primary contrasts; Holm鈥揃onferroni within each metric's family of self-vs-control contrasts; TOST equivalence at pre-specified bounds |d| &lt; 0.5 and |螖| &lt; 10% of the control mean (90% CI reported); JZS Bayes factors with a Cauchy prior of scale r = 0.707, validated against the analytic anchor BF&lt;sub&gt;01&lt;/sub&gt;(t = 0, n = 10/arm) = 2.52. n = 10 independent trials per arm (n = 20 in the replication; n = 6 in the two extra-gain series), independent random seeds; analysis window = second half of each trial.</p>
+
+<p><b>Code and data availability.</b> Circuit builder, experiment harness, comparison and Bayes-factor code, and every raw stdout/CSV are in the supplementary material and at https://github.com/iice662/flymind-selfview. The interactive implementation runs as a Terraria mod (tModLoader 1.4.4.9) in which the same experiment is executed by pressing F9.</p>
+
+<p><b>Use of generative AI.</b> The text of this manuscript was drafted with a large language model (<code>DeepSeek-V4.1-Flash</code>, via the DeepSeek Harness, on <code>2026-09-28</code>), used under author direction for drafting and language editing. The same model wrote the simulation harness, the statistical analysis code and the figure scripts from the authors' specifications; all code was executed and its outputs verified by the authors, and the full prompt log is provided in Supplementary Note S2. No AI-generated images are used: every figure is a programmatic plot of the authors' own data produced by <code>tools/make_main_figures.py</code> and <code>tools/make_figures.py</code> (matplotlib). The authors take full responsibility for all content.</p>
+
+<hr>
+
+<h2>Acknowledgments</h2>
+
+<p>We thank the FlyWire Consortium for the MaleCNS v1.0 connectome and the accompanying transmitter predictions, and the authors of ref. <i>8</i> for publishing the integrate-and-fire constants and the calibration target used here. <b>Funding:</b> this work received no external funding. <b>Competing interests:</b> the authors declare no competing interests. <b>Author contributions:</b> Y.C. designed the study, built the circuit, ran the simulations and analyses, and wrote the manuscript.</p>
+
+<p><b>Declaration of generative AI (repeated here per journal policy).</b> A large language model (<code>DeepSeek-V4.1-Flash</code>, DeepSeek Harness) was used to draft and edit the manuscript text and, under author direction, to write the simulation, analysis and plotting code. All data were produced by the authors' own simulations; all code was executed, inspected and validated by the authors; every numerical value in the manuscript, tables and figures was regenerated from the deposited raw per-trial data. No AI-generated images are included. Full disclosure, including the prompt log, is in Methods and Supplementary Note S2.</p>
+
+<hr>
+
+<h2>References</h2>
+
+<p>1. J. Seelig, V. Jayaraman, Neural dynamics for landmark orientation and angular path integration. <i>Nature</i> <b>521</b>, 186鈥?91 (2015). doi:10.1038/nature14446</p>
+<p>2. D. Turner-Evans <i>et al.</i>, Angular velocity integration in a fly heading circuit. <i>eLife</i> <b>6</b>, e23496 (2017).</p>
+<p>3. S. S. Kim, H. Rouault, S. Druckmann, V. Jayaraman, Ring attractor dynamics in the <i>Drosophila</i> central brain. <i>Science</i> <b>356</b>, 849鈥?53 (2017).</p>
+<p>4. T. Pisokas, S. Heinze, B. Webb, The head direction circuit of two insect species. <i>PLoS Comput. Biol.</i> <b>16</b>, e1008322 (2020).</p>
+<p>5. Berg <i>et al.</i>, Sexual dimorphism in the complete <i>Drosophila</i> male central nervous system connectome. <i>Cell</i> (2026). PII S0092-8674(26)00942-6; https://www.cell.com/cell/fulltext/S0092-8674(26)00942-6 (MaleCNS v1.0)</p>
+<p>6. S. Dorkenwald <i>et al.</i>, Neuronal wiring diagram of an adult brain. <i>Nature</i> <b>634</b>, 124鈥?38 (2024). doi:10.1038/s41586-024-07558-y</p>
+<p>7. A. Schlegel <i>et al.</i>, Whole-brain annotation and multi-connectome cell typing of <i>Drosophila</i>. <i>Nature</i> <b>634</b>, 139鈥?52 (2024). doi:10.1038/s41586-024-07389-x</p>
+<p>8. P. K. Shiu <i>et al.</i>, A <i>Drosophila</i> computational brain model reveals sensorimotor processing. <i>Nature</i> <b>634</b>, 210鈥?19 (2024). doi:10.1038/s41586-024-07763-9</p>
+<p>9. P. S. Efraimidis, P. G. Spirakis, Weighted random sampling with a reservoir. <i>Inf. Process. Lett.</i> <b>97</b>, 181鈥?85 (2006).</p>
+<p>10. J. N. Rouder, P. L. Speckman, D. Sun, R. D. Morey, G. Iverson, Bayesian t tests for accepting and rejecting the null hypothesis. <i>Psychon. Bull. Rev.</i> <b>16</b>, 225鈥?37 (2009).</p>
+<p>11. S. Holm, A simple sequentially rejective multiple test procedure. <i>Scand. J. Stat.</i> <b>6</b>, 65鈥?0 (1979).</p>
+<p>12. B. L. Welch, The generalization of "Student's" problem when several different population variances are involved. <i>Biometrika</i> <b>34</b>, 28鈥?5 (1947).</p>
+<p>13. D. Lakens, Equivalence tests: a practical primer. <i>Soc. Psychol. Personal. Sci.</i> <b>8</b>, 355鈥?62 (2017).</p>
+<p>14. B. Webb, Neural mechanisms for prediction: do insects have forward models? <i>Trends Neurosci.</i> <b>27</b>, 278鈥?82 (2004). doi:10.1016/j.tins.2004.03.004</p>
+<p>15. B. Webb, Sensorimotor control of navigation in arthropod and artificial systems. <i>Arthropod Struct. Dev.</i> <b>33</b>, 301鈥?29 (2004). doi:10.1016/j.asd.2004.05.009</p>
+<p>16. M. Winding <i>et al.</i>, The connectome of an insect brain. <i>Science</i> <b>379</b>, eadd9330 (2023). doi:10.1126/science.add9330</p>
+<p>17. C. Lin <i>et al.</i>, A comprehensive wiring diagram of the protocerebral bridge for visual information processing in the <i>Drosophila</i> brain. <i>eLife</i> <b>12</b>, e78484 (2023).</p>
+
+<hr>
+
+<h2>Figure legends</h2>
+
+<p>Display items are generated by <code>tools/make_main_figures.py</code> (main1鈥搈ain4, main4b, supp1鈥搒upp4); the earlier <code>tools/make_figures.py</code> set is retained as an archive and is not part of the submission.</p>
+
+<p><b>Fig. 1. A connectome-constrained circuit, the manipulation, and its balancing.</b> (A) Census of the 12,000-neuron slice (1,615,753 synapses). Upper block, populations: sensory 2,695, antennal 620, KC 193, dopamine 344, MBON 67, descending 119, motor 316, LPTC 1,770, CX 2,074, unnamed 3,802. Lower block, CX subfamilies: ring EPG/PEG 68, columnar 1,036, fan-body 601, other CX 369. (B) 魏 calibration sweep (魏 = 100鈥?000, log axis): CX mean rate (left axis, circles) and percentage of CX cells active (right axis, squares); the dotted line marks 魏 = 300, used throughout. (C) The heading pathway link by link, synapse counts on a log axis: LPTC鈫抮ing 67, LPTC鈫抍olumnar 58, columnar鈫抮ing 1,031, ring鈫抮ing 1,692, ring鈫抐an-body 539, fan-body鈫抎escending 88, descending鈫抦otor 2,810. (D, E) Delivered stimulation events per arm normalised to the slip-free self patch (dashed line = 1.0), for the optic-flow (D) and yaw (E) experiments. Per-step drive matching equalises each arm's expected total to the self arm's; realised delivered ratios stay within 0.08% of the self arm (optic flow 0.99947鈥?.00070, yaw 0.99956鈥?.00004), and all arms in a trial share one stimulus stream. (F) CX synapses silenced by each manipulation with the number projecting onto the 68 ring cells in parentheses: self* 30,919 (1,354), shuffled 13,053 (412), matched random 30,958. The patch is not a neutral subset of the CX input.</p>
+
+<p><b>Fig. 2. The injected signal reaches the ring within one synapse.</b> (A) Percentage of CX cells reached by hop count from the visual pool: 97.2% (2,015 / 2,074) at one hop, 97.4% at two and three; 48,315 direct pool鈫扖X synapses. (B) CX-only spikes per 0.5 ms step around a synchronous pool volley (baseline measured over the preceding 100 ms), for 魏 = 100 / 300 / 1000 with and without the body patch, on a symlog axis. Peak 21 spikes at 2.5 ms at 魏 = 300 (baseline 0.17; 105 cells, 5.1% of CX), still present at 魏 = 100 (2.6%); the body patch reduces the peak to 6 spikes (鈭?1%) and 41 cells (鈭?1%).</p>
+
+<p><b>Fig. 3. Optic flow: a state change with a rate component attributable to input loss.</b> (A鈥揋) Per-arm metric values with 95% CI, n = 10, 3 s per trial: CX mean rate, CX active fraction, ring rate, ring bump R, effective dimensionality, fluctuation SD, columnar rate. Arms: self* (slip-free patch), optic flow, shuffled patch, matched random patch, decorrelated patch, rest. (H) Effect size (Cohen's d) of the body patch against each control, split into rate metrics (CX, ring, columnar, fan-body, other rate, fluctuation SD) and geometry metrics (active fraction, effective dimensionality, bump R, pairwise correlation). The matched random patch, which silences the same 30,958 CX synapses at random, reproduces the rate changes but not the geometry changes.</p>
+
+<p><b>Fig. 4. Heading: a silent body region costs coding, a conflicting one costs fidelity.</b> (A, B) n = 20 trials per arm: (A) direction tuning versus push鈥損ull wiring (<code>cx_tuning_wire_corr</code>) and (B) steering readout versus yaw command, per arm with 95% CI. The slip-free patch is indistinguishable from optic flow, shuffled and matched random patches (BF&lt;sub&gt;01&lt;/sub&gt; = 2.8鈥?.0 and 2.4鈥?.8 against a design ceiling of 3.24); the decorrelated patch is not. (C, D) Conflict dose, 伪 = 0, 0.25, 0.5, 0.75, 1 (fraction of the ring's optic-flow input replaced by a de-correlated copy), n = 10 per point, mean 卤 95% CI: (C) tuning versus wiring, 蟻 = 鈭?.82; (D) steering fidelity, 蟻 = 鈭?.94. (E鈥揌) Same five-point series: (E) steering amplitude, 蟻 = 鈭?.91; (F) yaw modulation depth, 蟻 = 鈭?.92; (G) population 蟿, 蟻 = 鈭?.89; (H) effective dimensionality, 蟻 = +0.57. All P = 2 脳 10&lt;sup&gt;鈭?&lt;/sup&gt; (permutation, 4,000 draws). <b>[Corrected: BF01 = 2.8-3.0 / 2.4-2.8 is superseded - the same contrasts now give BF10 = 1.2e14 (tuning) and 5.8e9 (steering) against the natural condition; the silent patch is not equivalent to it.]</b></p>
+
+<p><b>Fig. 5. The conflict effect is not a rate or drive artefact and survives a fourfold gain change.</b> (A) Mean CX rate and delivered stimulation events against 伪 (left axis in Hz, right axis in events 脳 10&lt;sup&gt;鈭?&lt;/sup&gt;), both flat: 蟻 = +0.10 (P = 0.46) and 蟻 = 鈭?.04. (B) Three primary readouts at 魏 = 150, 300 and 600 (n = 6 for the replication gains), each normalised to its own 伪 = 0 value and vertically offset for display; the rank order across 伪 is preserved at every gain (steering fidelity 蟻 = 鈭?.98 / 鈭?.94 / 鈭?.87; tuning 蟻 = 鈭?.92 / 鈭?.82 / 鈭?.84; amplitude 蟻 = 鈭?.92 / 鈭?.91 / 鈭?.86; all P 鈮?0.007). (C) Bayes factors BF&lt;sub&gt;01&lt;/sub&gt; at n = 20 for the six readouts against the three control manipulations; the dashed line marks BF&lt;sub&gt;01&lt;/sub&gt; = 3 (moderate evidence for the null), the dotted line the 3.24 ceiling attainable by this design at t = 0.</p>
+
+<p><b>Fig. S1. Patch-size dose鈥搑esponse and positive controls.</b> (A) Delivered stimulation events per trial against patch fraction 0, 0.125, 0.25, 0.5 (7.02 脳 10&lt;sup&gt;5&lt;/sup&gt; each; drive matched to within 0.07%). (B) Four readouts against patch fraction, each normalised to its fraction-0 value: monotone degradation (|蟻| 鈮?0.18, all P 鈮?0.28). (C) Total drive 脳0.5 / 脳1.0 / 脳1.5: CX mean rate with 95% CI; effect sizes d = 15鈥?3. (D) Synchronised injection at the same expected total changes effective dimensionality (d = 7.0) while leaving the heading readouts unchanged (all P 鈮?0.4).</p>
+
+<p><b>Fig. S2. Equivalence bounds for the slip-free patch.</b> Difference (raw units) between the slip-free patch and each control for eight readouts, with 90% CI; thin horizontal bars mark the pre-registered equivalence bound |d| &lt; 0.5. The single unresolved readout is the ring phase lag behind yaw (<code>ring_lag_yaw_deg</code>, d = 鈭?.62).</p>
+
+<p><b>Fig. S3. What a null result can buy at this design.</b> Bayes factor BF&lt;sub&gt;01&lt;/sub&gt; at t = 0 against trials per arm for the JZS prior (Cauchy r = 0.707). The dashed line marks BF&lt;sub&gt;01&lt;/sub&gt; = 3; the dotted line marks n = 20, the design used in Fig. 4 and Fig. 5C (ceiling 3.24).</p>
+
+<p><b>Fig. S4. The drive-matching trap.</b> The same contrasts before (unbalanced) and after (balanced) per-step drive matching: (A) tuning versus wiring and (B) CX mean rate, mean 卤 95% CI over optic flow, self* and shuffled. Unbalanced arms produce a large apparent effect (d = 鈭?4.5 on the heading readout, P = 4.7 脳 10&lt;sup&gt;鈭?7&lt;/sup&gt;) that reverses to d = 鈭?.05, P = 0.91 once delivered drive is equalised.</p>
+
+<hr>
+
+<h2>Table 1. Heading readouts per arm (I2-heading, kappa = 300, n = 10 trials per arm)</h2>
+
+<p>Generated from <code>results/raw/I2-heading-trials.csv</code> by <code>python tools\make_tables.py</code>; every value in this table and in Tables 2-3 is recomputed from the deposited per-trial data, and <code>python tools\verify_headline_numbers.py</code> checks the quoted numbers against it.</p>
+
+<table>
+<tr><th>readout</th><th>rest</th><th>flow</th><th>self</th><th>shuffle</th><th>randmat</th><th>decorr</th><th>conf25</th><th>conf50</th><th>conf75</th></tr>
+<tr><td>CX rate (Hz)</td><td>0.2523</td><td>3.952</td><td>3.172</td><td>3.819</td><td>3.235</td><td>3.962</td><td>3.42</td><td>3.63</td><td>3.853</td></tr>
+<tr><td>CX active fraction</td><td>0.0135</td><td>0.2145</td><td>0.1696</td><td>0.2083</td><td>0.1756</td><td>0.201</td><td>0.1737</td><td>0.1852</td><td>0.1965</td></tr>
+<tr><td>yaw modulation (Hz)</td><td>0</td><td>1.919</td><td>1.153</td><td>1.542</td><td>0.9526</td><td>0.9366</td><td>0.9853</td><td>0.9717</td><td>0.9713</td></tr>
+<tr><td>tuning &lt;-&gt; wiring r</td><td>0</td><td>0.3093</td><td>0.2359</td><td>0.3424</td><td>0.31</td><td>0.252</td><td>0.2518</td><td>0.2549</td><td>0.2539</td></tr>
+<tr><td>steering fidelity</td><td>0</td><td>0.786</td><td>0.7405</td><td>0.7702</td><td>0.8143</td><td>0.6154</td><td>0.7142</td><td>0.6793</td><td>0.6541</td></tr>
+<tr><td>steering amplitude (Hz)</td><td>182.1</td><td>501.9</td><td>424.3</td><td>488.9</td><td>525.7</td><td>431.3</td><td>423</td><td>425.5</td><td>422.4</td></tr>
+<tr><td>descending rate (Hz)</td><td>1060</td><td>2072</td><td>1930</td><td>2093</td><td>2072</td><td>2076</td><td>1976</td><td>2009</td><td>2041</td></tr>
+<tr><td>population tau (ms)</td><td>31.85</td><td>223.2</td><td>150.3</td><td>196.8</td><td>146.2</td><td>131</td><td>104.3</td><td>117.6</td><td>116.5</td></tr>
+<tr><td>dim. (PR)</td><td>25.25</td><td>51</td><td>52.83</td><td>53.97</td><td>53.92</td><td>59.86</td><td>55.12</td><td>54.54</td><td>57.99</td></tr>
+<tr><td>bump R</td><td>0</td><td>0.3269</td><td>0.3585</td><td>0.3315</td><td>0.3364</td><td>0.2742</td><td>0.3278</td><td>0.3036</td><td>0.2765</td></tr>
+<tr><td>ring circularity</td><td>1</td><td>0.1333</td><td>0.1687</td><td>0.1553</td><td>0.1333</td><td>0.112</td><td>0.1553</td><td>0.1313</td><td>0.14</td></tr>
+<tr><td>ring PC1-2 var</td><td>0</td><td>0.4215</td><td>0.4357</td><td>0.4349</td><td>0.4123</td><td>0.3995</td><td>0.4408</td><td>0.4275</td><td>0.4231</td></tr>
+<tr><td>fluctuation SD (Hz)</td><td>0.04831</td><td>0.9971</td><td>0.7568</td><td>0.9306</td><td>0.7642</td><td>0.8419</td><td>0.7748</td><td>0.8029</td><td>0.828</td></tr>
+<tr><td>delivered events</td><td>0</td><td>6.551e+05</td><td>6.552e+05</td><td>6.553e+05</td><td>6.551e+05</td><td>6.558e+05</td><td>6.555e+05</td><td>6.556e+05</td><td>6.554e+05</td></tr>
+<tr><td>patch/surround</td><td>0</td><td>0.9767</td><td>0.4257</td><td>0.4269</td><td>0.4614</td><td>0.8918</td><td>0.5143</td><td>0.636</td><td>0.7619</td></tr>
+</table>
+
+<hr>
+
+<h2>Table 2. Self versus each control manipulation: difference, effect size, equivalence test and Bayes factor</h2>
+
+<table>
+<tr><th>readout</th><th>contrast</th><th>diff</th><th>d</th><th>P (TOST, +-10%)</th><th>BF01</th><th>BF10</th></tr>
+<tr><td>delivered events (n = 10)</td><td>vs flow</td><td>165.4</td><td>0.173</td><td>1.2e-29</td><td>2.39</td><td>0.419</td></tr>
+<tr><td>delivered events (n = 10)</td><td>vs shuffle</td><td>-18</td><td>-0.019</td><td>1.1e-29</td><td>2.52</td><td>0.398</td></tr>
+<tr><td>delivered events (n = 10)</td><td>vs randmat</td><td>139.7</td><td>0.167</td><td>2.4e-27</td><td>2.4</td><td>0.417</td></tr>
+<tr><td>delivered events (n = 10)</td><td>vs decorr</td><td>-550.2</td><td>-0.590</td><td>1.1e-29</td><td>1.38</td><td>0.723</td></tr>
+<tr><td>CX rate (Hz) (n = 10)</td><td>vs flow</td><td>-0.7802</td><td>-9.773</td><td>1</td><td>7.84e-12</td><td>1.28e+11</td></tr>
+<tr><td>CX rate (Hz) (n = 10)</td><td>vs shuffle</td><td>-0.6474</td><td>-9.888</td><td>1</td><td>6.48e-12</td><td>1.54e+11</td></tr>
+<tr><td>CX rate (Hz) (n = 10)</td><td>vs randmat</td><td>-0.06276</td><td>-0.919</td><td>5e-08</td><td>0.624</td><td>1.6</td></tr>
+<tr><td>CX rate (Hz) (n = 10)</td><td>vs decorr</td><td>-0.7902</td><td>-8.634</td><td>1</td><td>5.79e-11</td><td>1.73e+10</td></tr>
+<tr><td>CX active fraction (n = 10)</td><td>vs flow</td><td>-0.04484</td><td>-10.117</td><td>1</td><td>4.47e-12</td><td>2.24e+11</td></tr>
+<tr><td>CX active fraction (n = 10)</td><td>vs shuffle</td><td>-0.03867</td><td>-9.549</td><td>1</td><td>1.14e-11</td><td>8.77e+10</td></tr>
+<tr><td>CX active fraction (n = 10)</td><td>vs randmat</td><td>-0.005979</td><td>-1.251</td><td>3.2e-05</td><td>0.219</td><td>4.58</td></tr>
+<tr><td>CX active fraction (n = 10)</td><td>vs decorr</td><td>-0.03134</td><td>-5.957</td><td>1</td><td>1.95e-08</td><td>5.13e+07</td></tr>
+<tr><td>population tau (ms) (n = 10)</td><td>vs flow</td><td>-72.91</td><td>-2.872</td><td>1</td><td>0.000374</td><td>2.67e+03</td></tr>
+<tr><td>population tau (ms) (n = 10)</td><td>vs shuffle</td><td>-46.53</td><td>-1.888</td><td>0.98</td><td>0.0195</td><td>51.2</td></tr>
+<tr><td>population tau (ms) (n = 10)</td><td>vs randmat</td><td>4.107</td><td>0.148</td><td>0.2</td><td>2.42</td><td>0.413</td></tr>
+<tr><td>population tau (ms) (n = 10)</td><td>vs decorr</td><td>19.27</td><td>0.577</td><td>0.66</td><td>1.42</td><td>0.706</td></tr>
+<tr><td>dim. (PR) (n = 10)</td><td>vs flow</td><td>1.832</td><td>0.515</td><td>0.028</td><td>1.59</td><td>0.63</td></tr>
+<tr><td>dim. (PR) (n = 10)</td><td>vs shuffle</td><td>-1.133</td><td>-0.300</td><td>0.011</td><td>2.15</td><td>0.466</td></tr>
+<tr><td>dim. (PR) (n = 10)</td><td>vs randmat</td><td>-1.083</td><td>-0.180</td><td>0.069</td><td>2.38</td><td>0.421</td></tr>
+<tr><td>dim. (PR) (n = 10)</td><td>vs decorr</td><td>-7.03</td><td>-2.088</td><td>0.75</td><td>0.0087</td><td>115</td></tr>
+<tr><td>fluctuation SD (Hz) (n = 10)</td><td>vs flow</td><td>-0.2403</td><td>-8.608</td><td>1</td><td>6.08e-11</td><td>1.65e+10</td></tr>
+<tr><td>fluctuation SD (Hz) (n = 10)</td><td>vs shuffle</td><td>-0.1738</td><td>-5.265</td><td>1</td><td>1.24e-07</td><td>8.05e+06</td></tr>
+<tr><td>fluctuation SD (Hz) (n = 10)</td><td>vs randmat</td><td>-0.007352</td><td>-0.266</td><td>1.4e-05</td><td>2.22</td><td>0.45</td></tr>
+<tr><td>fluctuation SD (Hz) (n = 10)</td><td>vs decorr</td><td>-0.08504</td><td>-2.170</td><td>0.52</td><td>0.00624</td><td>160</td></tr>
+<tr><td>bump R (n = 10)</td><td>vs flow</td><td>0.03158</td><td>1.441</td><td>0.46</td><td>0.111</td><td>9.02</td></tr>
+<tr><td>bump R (n = 10)</td><td>vs shuffle</td><td>0.02691</td><td>1.258</td><td>0.26</td><td>0.213</td><td>4.69</td></tr>
+<tr><td>bump R (n = 10)</td><td>vs randmat</td><td>0.02202</td><td>0.857</td><td>0.16</td><td>0.739</td><td>1.35</td></tr>
+<tr><td>bump R (n = 10)</td><td>vs decorr</td><td>0.0843</td><td>3.707</td><td>1</td><td>1.68e-05</td><td>5.97e+04</td></tr>
+<tr><td>patch/surround (n = 10)</td><td>vs flow</td><td>-0.551</td><td>-3505.490</td><td>1</td><td>4.93e-31</td><td>2.03e+30</td></tr>
+<tr><td>patch/surround (n = 10)</td><td>vs shuffle</td><td>-0.001243</td><td>-5.702</td><td>3.1e-38</td><td>3.78e-08</td><td>2.64e+07</td></tr>
+<tr><td>patch/surround (n = 10)</td><td>vs randmat</td><td>-0.03565</td><td>-162.215</td><td>5.2e-43</td><td>4.09e-29</td><td>2.45e+28</td></tr>
+<tr><td>patch/surround (n = 10)</td><td>vs decorr</td><td>-0.4661</td><td>-41.459</td><td>1</td><td>4.86e-22</td><td>2.06e+21</td></tr>
+<tr><td>ring PC1-2 var (n = 10)</td><td>vs flow</td><td>0.01418</td><td>0.613</td><td>0.0081</td><td>1.32</td><td>0.758</td></tr>
+<tr><td>ring PC1-2 var (n = 10)</td><td>vs shuffle</td><td>0.0007921</td><td>0.022</td><td>0.0094</td><td>2.52</td><td>0.398</td></tr>
+<tr><td>ring PC1-2 var (n = 10)</td><td>vs randmat</td><td>0.02337</td><td>0.691</td><td>0.13</td><td>1.11</td><td>0.897</td></tr>
+<tr><td>ring PC1-2 var (n = 10)</td><td>vs decorr</td><td>0.03621</td><td>1.030</td><td>0.41</td><td>0.45</td><td>2.22</td></tr>
+<tr><td>ring circularity (n = 10)</td><td>vs flow</td><td>0.03533</td><td>0.852</td><td>0.87</td><td>0.749</td><td>1.33</td></tr>
+<tr><td>ring circularity (n = 10)</td><td>vs shuffle</td><td>0.01333</td><td>0.352</td><td>0.45</td><td>2.02</td><td>0.494</td></tr>
+<tr><td>ring circularity (n = 10)</td><td>vs randmat</td><td>0.03533</td><td>1.298</td><td>0.96</td><td>0.186</td><td>5.38</td></tr>
+<tr><td>ring circularity (n = 10)</td><td>vs decorr</td><td>0.05667</td><td>1.756</td><td>1</td><td>0.0331</td><td>30.2</td></tr>
+<tr><td>yaw modulation (Hz) (n = 10)</td><td>vs flow</td><td>-0.7668</td><td>-7.119</td><td>1</td><td>1.24e-09</td><td>8.07e+08</td></tr>
+<tr><td>yaw modulation (Hz) (n = 10)</td><td>vs shuffle</td><td>-0.3895</td><td>-3.043</td><td>1</td><td>0.000193</td><td>5.19e+03</td></tr>
+<tr><td>yaw modulation (Hz) (n = 10)</td><td>vs randmat</td><td>0.2001</td><td>1.336</td><td>0.93</td><td>0.163</td><td>6.15</td></tr>
+<tr><td>yaw modulation (Hz) (n = 10)</td><td>vs decorr</td><td>0.2161</td><td>1.384</td><td>0.95</td><td>0.137</td><td>7.3</td></tr>
+<tr><td>tuning &lt;-&gt; wiring r (n = 10)</td><td>vs flow</td><td>-0.07341</td><td>-3.518</td><td>1</td><td>3.29e-05</td><td>3.04e+04</td></tr>
+<tr><td>tuning &lt;-&gt; wiring r (n = 10)</td><td>vs shuffle</td><td>-0.1065</td><td>-4.680</td><td>1</td><td>6.89e-07</td><td>1.45e+06</td></tr>
+<tr><td>tuning &lt;-&gt; wiring r (n = 10)</td><td>vs randmat</td><td>-0.07409</td><td>-1.805</td><td>0.98</td><td>0.0272</td><td>36.8</td></tr>
+<tr><td>tuning &lt;-&gt; wiring r (n = 10)</td><td>vs decorr</td><td>-0.01608</td><td>-0.556</td><td>0.24</td><td>1.47</td><td>0.679</td></tr>
+<tr><td>steering fidelity (n = 10)</td><td>vs flow</td><td>-0.04547</td><td>-2.868</td><td>0.0001</td><td>0.00038</td><td>2.63e+03</td></tr>
+<tr><td>steering fidelity (n = 10)</td><td>vs shuffle</td><td>-0.02962</td><td>-2.070</td><td>3.6e-07</td><td>0.00936</td><td>107</td></tr>
+<tr><td>steering fidelity (n = 10)</td><td>vs randmat</td><td>-0.07379</td><td>-4.635</td><td>0.15</td><td>7.92e-07</td><td>1.26e+06</td></tr>
+<tr><td>steering fidelity (n = 10)</td><td>vs decorr</td><td>0.1251</td><td>4.615</td><td>1</td><td>8.43e-07</td><td>1.19e+06</td></tr>
+<tr><td>steering amplitude (Hz) (n = 10)</td><td>vs flow</td><td>-77.65</td><td>-6.358</td><td>1</td><td>7.2e-09</td><td>1.39e+08</td></tr>
+<tr><td>steering amplitude (Hz) (n = 10)</td><td>vs shuffle</td><td>-64.64</td><td>-5.668</td><td>1</td><td>4.14e-08</td><td>2.42e+07</td></tr>
+<tr><td>steering amplitude (Hz) (n = 10)</td><td>vs randmat</td><td>-101.4</td><td>-8.265</td><td>1</td><td>1.17e-10</td><td>8.57e+09</td></tr>
+<tr><td>steering amplitude (Hz) (n = 10)</td><td>vs decorr</td><td>-6.972</td><td>-0.490</td><td>1.9e-05</td><td>1.66</td><td>0.603</td></tr>
+<tr><td>descending rate (Hz) (n = 10)</td><td>vs flow</td><td>-141.6</td><td>-11.920</td><td>3.9e-09</td><td>3.07e-13</td><td>3.26e+12</td></tr>
+<tr><td>descending rate (Hz) (n = 10)</td><td>vs shuffle</td><td>-162.8</td><td>-21.812</td><td>2.9e-11</td><td>1.46e-17</td><td>6.83e+16</td></tr>
+<tr><td>descending rate (Hz) (n = 10)</td><td>vs randmat</td><td>-141.9</td><td>-12.575</td><td>1.3e-09</td><td>1.27e-13</td><td>7.85e+12</td></tr>
+<tr><td>descending rate (Hz) (n = 10)</td><td>vs decorr</td><td>-145.7</td><td>-8.391</td><td>3.3e-06</td><td>9.15e-11</td><td>1.09e+10</td></tr>
+<tr><td>delivered events (n = 20)</td><td>vs flow</td><td>2.2</td><td>0.002</td><td>1.8e-60</td><td>3.24</td><td>0.309</td></tr>
+<tr><td>delivered events (n = 20)</td><td>vs shuffle</td><td>78.1</td><td>0.104</td><td>3.1e-61</td><td>3.1</td><td>0.322</td></tr>
+<tr><td>delivered events (n = 20)</td><td>vs randmat</td><td>133.3</td><td>0.168</td><td>6.6e-63</td><td>2.89</td><td>0.345</td></tr>
+<tr><td>delivered events (n = 20)</td><td>vs decorr</td><td>-80.55</td><td>-0.104</td><td>1.7e-62</td><td>3.1</td><td>0.322</td></tr>
+<tr><td>CX rate (Hz) (n = 20)</td><td>vs flow</td><td>-0.7641</td><td>-10.730</td><td>1</td><td>4.57e-27</td><td>2.19e+26</td></tr>
+<tr><td>CX rate (Hz) (n = 20)</td><td>vs shuffle</td><td>-0.6354</td><td>-7.278</td><td>1</td><td>3.76e-21</td><td>2.66e+20</td></tr>
+<tr><td>CX rate (Hz) (n = 20)</td><td>vs randmat</td><td>0.006164</td><td>0.084</td><td>2.4e-16</td><td>3.15</td><td>0.318</td></tr>
+<tr><td>CX rate (Hz) (n = 20)</td><td>vs decorr</td><td>-0.8288</td><td>-9.206</td><td>1</td><td>1.05e-24</td><td>9.54e+23</td></tr>
+<tr><td>CX active fraction (n = 20)</td><td>vs flow</td><td>-0.042</td><td>-9.987</td><td>1</td><td>5.87e-26</td><td>1.7e+25</td></tr>
+<tr><td>CX active fraction (n = 20)</td><td>vs shuffle</td><td>-0.03652</td><td>-8.295</td><td>1</td><td>4.04e-23</td><td>2.47e+22</td></tr>
+<tr><td>CX active fraction (n = 20)</td><td>vs randmat</td><td>-0.006919</td><td>-1.373</td><td>5.7e-08</td><td>0.00468</td><td>214</td></tr>
+<tr><td>CX active fraction (n = 20)</td><td>vs decorr</td><td>-0.03469</td><td>-5.708</td><td>1</td><td>1.34e-17</td><td>7.44e+16</td></tr>
+<tr><td>population tau (ms) (n = 20)</td><td>vs flow</td><td>-90.21</td><td>-4.534</td><td>1</td><td>2.12e-14</td><td>4.71e+13</td></tr>
+<tr><td>population tau (ms) (n = 20)</td><td>vs shuffle</td><td>-56.12</td><td>-2.743</td><td>1</td><td>2.41e-08</td><td>4.16e+07</td></tr>
+<tr><td>population tau (ms) (n = 20)</td><td>vs randmat</td><td>-10.64</td><td>-0.529</td><td>0.25</td><td>1.08</td><td>0.922</td></tr>
+<tr><td>population tau (ms) (n = 20)</td><td>vs decorr</td><td>8.261</td><td>0.310</td><td>0.29</td><td>2.21</td><td>0.452</td></tr>
+<tr><td>dim. (PR) (n = 20)</td><td>vs flow</td><td>-3.134</td><td>-0.721</td><td>0.055</td><td>0.441</td><td>2.27</td></tr>
+<tr><td>dim. (PR) (n = 20)</td><td>vs shuffle</td><td>-0.71</td><td>-0.140</td><td>0.0043</td><td>3</td><td>0.334</td></tr>
+<tr><td>dim. (PR) (n = 20)</td><td>vs randmat</td><td>-0.5203</td><td>-0.085</td><td>0.011</td><td>3.15</td><td>0.318</td></tr>
+<tr><td>dim. (PR) (n = 20)</td><td>vs decorr</td><td>-6</td><td>-1.119</td><td>0.57</td><td>0.0341</td><td>29.3</td></tr>
+<tr><td>fluctuation SD (Hz) (n = 20)</td><td>vs flow</td><td>-0.1863</td><td>-5.637</td><td>1</td><td>2.02e-17</td><td>4.94e+16</td></tr>
+<tr><td>fluctuation SD (Hz) (n = 20)</td><td>vs shuffle</td><td>-0.1452</td><td>-4.678</td><td>1</td><td>7.99e-15</td><td>1.25e+14</td></tr>
+<tr><td>fluctuation SD (Hz) (n = 20)</td><td>vs randmat</td><td>0.01375</td><td>0.440</td><td>1.2e-07</td><td>1.51</td><td>0.661</td></tr>
+<tr><td>fluctuation SD (Hz) (n = 20)</td><td>vs decorr</td><td>-0.09944</td><td>-2.827</td><td>0.86</td><td>1.16e-08</td><td>8.6e+07</td></tr>
+<tr><td>bump R (n = 20)</td><td>vs flow</td><td>0.05003</td><td>1.893</td><td>0.98</td><td>4.99e-05</td><td>2.01e+04</td></tr>
+<tr><td>bump R (n = 20)</td><td>vs shuffle</td><td>0.03776</td><td>1.452</td><td>0.69</td><td>0.00241</td><td>414</td></tr>
+<tr><td>bump R (n = 20)</td><td>vs randmat</td><td>0.02605</td><td>0.861</td><td>0.18</td><td>0.198</td><td>5.06</td></tr>
+<tr><td>bump R (n = 20)</td><td>vs decorr</td><td>0.09646</td><td>3.869</td><td>1</td><td>2.49e-12</td><td>4.01e+11</td></tr>
+<tr><td>patch/surround (n = 20)</td><td>vs flow</td><td>-0.551</td><td>-4052.790</td><td>1</td><td>2.16e-73</td><td>4.63e+72</td></tr>
+<tr><td>patch/surround (n = 20)</td><td>vs shuffle</td><td>-0.001243</td><td>-6.571</td><td>8.2e-81</td><td>1.22e-19</td><td>8.18e+18</td></tr>
+<tr><td>patch/surround (n = 20)</td><td>vs randmat</td><td>-0.03565</td><td>-186.917</td><td>6.6e-91</td><td>1.7e-67</td><td>5.9e+66</td></tr>
+<tr><td>patch/surround (n = 20)</td><td>vs decorr</td><td>-0.4674</td><td>-44.560</td><td>1</td><td>2.66e-49</td><td>3.76e+48</td></tr>
+<tr><td>ring PC1-2 var (n = 20)</td><td>vs flow</td><td>0.04253</td><td>1.307</td><td>0.56</td><td>0.008</td><td>125</td></tr>
+<tr><td>ring PC1-2 var (n = 20)</td><td>vs shuffle</td><td>0.03996</td><td>1.255</td><td>0.45</td><td>0.0121</td><td>82.5</td></tr>
+<tr><td>ring PC1-2 var (n = 20)</td><td>vs randmat</td><td>0.04603</td><td>1.302</td><td>0.68</td><td>0.00832</td><td>120</td></tr>
+<tr><td>ring PC1-2 var (n = 20)</td><td>vs decorr</td><td>0.03191</td><td>0.844</td><td>0.2</td><td>0.219</td><td>4.57</td></tr>
+<tr><td>ring circularity (n = 20)</td><td>vs flow</td><td>0.06067</td><td>1.360</td><td>1</td><td>0.0052</td><td>192</td></tr>
+<tr><td>ring circularity (n = 20)</td><td>vs shuffle</td><td>0.04533</td><td>1.182</td><td>0.99</td><td>0.0213</td><td>47</td></tr>
+<tr><td>ring circularity (n = 20)</td><td>vs randmat</td><td>0.02933</td><td>0.666</td><td>0.84</td><td>0.584</td><td>1.71</td></tr>
+<tr><td>ring circularity (n = 20)</td><td>vs decorr</td><td>0.05467</td><td>1.342</td><td>1</td><td>0.00604</td><td>166</td></tr>
+<tr><td>yaw modulation (Hz) (n = 20)</td><td>vs flow</td><td>-0.8193</td><td>-7.411</td><td>1</td><td>2.02e-21</td><td>4.96e+20</td></tr>
+<tr><td>yaw modulation (Hz) (n = 20)</td><td>vs shuffle</td><td>-0.5445</td><td>-4.726</td><td>1</td><td>5.84e-15</td><td>1.71e+14</td></tr>
+<tr><td>yaw modulation (Hz) (n = 20)</td><td>vs randmat</td><td>0.08272</td><td>0.703</td><td>0.35</td><td>0.484</td><td>2.07</td></tr>
+<tr><td>yaw modulation (Hz) (n = 20)</td><td>vs decorr</td><td>0.03291</td><td>0.236</td><td>0.064</td><td>2.59</td><td>0.386</td></tr>
+<tr><td>tuning &lt;-&gt; wiring r (n = 20)</td><td>vs flow</td><td>-0.06653</td><td>-4.670</td><td>1</td><td>8.45e-15</td><td>1.18e+14</td></tr>
+<tr><td>tuning &lt;-&gt; wiring r (n = 20)</td><td>vs shuffle</td><td>-0.09212</td><td>-5.785</td><td>1</td><td>8.66e-18</td><td>1.15e+17</td></tr>
+<tr><td>tuning &lt;-&gt; wiring r (n = 20)</td><td>vs randmat</td><td>-0.06332</td><td>-2.580</td><td>1</td><td>1.01e-07</td><td>9.92e+06</td></tr>
+<tr><td>tuning &lt;-&gt; wiring r (n = 20)</td><td>vs decorr</td><td>0.0109</td><td>0.255</td><td>0.18</td><td>2.5</td><td>0.4</td></tr>
+<tr><td>steering fidelity (n = 20)</td><td>vs flow</td><td>-0.05451</td><td>-3.328</td><td>1.8e-05</td><td>1.72e-10</td><td>5.81e+09</td></tr>
+<tr><td>steering fidelity (n = 20)</td><td>vs shuffle</td><td>-0.03001</td><td>-1.697</td><td>2.3e-10</td><td>0.000289</td><td>3.46e+03</td></tr>
+<tr><td>steering fidelity (n = 20)</td><td>vs randmat</td><td>-0.07398</td><td>-4.406</td><td>0.097</td><td>5.11e-14</td><td>1.96e+13</td></tr>
+<tr><td>steering fidelity (n = 20)</td><td>vs decorr</td><td>0.1364</td><td>3.254</td><td>1</td><td>3.15e-10</td><td>3.17e+09</td></tr>
+<tr><td>steering amplitude (Hz) (n = 20)</td><td>vs flow</td><td>-69.65</td><td>-5.369</td><td>1</td><td>9.97e-17</td><td>1e+16</td></tr>
+<tr><td>steering amplitude (Hz) (n = 20)</td><td>vs shuffle</td><td>-67.31</td><td>-3.630</td><td>1</td><td>1.56e-11</td><td>6.42e+10</td></tr>
+<tr><td>steering amplitude (Hz) (n = 20)</td><td>vs randmat</td><td>-90.26</td><td>-5.901</td><td>1</td><td>4.48e-18</td><td>2.23e+17</td></tr>
+<tr><td>steering amplitude (Hz) (n = 20)</td><td>vs decorr</td><td>-5.105</td><td>-0.256</td><td>4.2e-07</td><td>2.5</td><td>0.401</td></tr>
+<tr><td>descending rate (Hz) (n = 20)</td><td>vs flow</td><td>-150.4</td><td>-13.113</td><td>1.3e-46</td><td>3.47e-30</td><td>2.88e+29</td></tr>
+<tr><td>descending rate (Hz) (n = 20)</td><td>vs shuffle</td><td>-178.7</td><td>-14.089</td><td>8.2e-10</td><td>2.61e-31</td><td>3.83e+30</td></tr>
+<tr><td>descending rate (Hz) (n = 20)</td><td>vs randmat</td><td>-156.6</td><td>-11.740</td><td>6.7e-15</td><td>1.84e-28</td><td>5.43e+27</td></tr>
+<tr><td>descending rate (Hz) (n = 20)</td><td>vs decorr</td><td>-150.3</td><td>-8.810</td><td>3.6e-12</td><td>4.92e-24</td><td>2.03e+23</td></tr>
+</table>
+
+<hr>
+
+<h2>Table 3. Conflict dose: every readout against alpha (kappa = 300, n = 10 per level, 6 s per trial)</h2>
+
+<table>
+<tr><th>readout</th><th>a=0</th><th>a=0.25</th><th>a=0.5</th><th>a=0.75</th><th>a=1</th><th>rho</th><th>P</th></tr>
+<tr><td>CX rate (Hz)</td><td>3.172</td><td>3.42</td><td>3.63</td><td>3.853</td><td>3.962</td><td>+0.952</td><td>0.0002</td></tr>
+<tr><td>CX active fraction</td><td>0.1696</td><td>0.1737</td><td>0.1852</td><td>0.1965</td><td>0.201</td><td>+0.887</td><td>0.0002</td></tr>
+<tr><td>yaw modulation (Hz)</td><td>1.153</td><td>0.9853</td><td>0.9717</td><td>0.9713</td><td>0.9366</td><td>-0.335</td><td>0.021</td></tr>
+<tr><td>tuning &lt;-&gt; wiring r</td><td>0.2359</td><td>0.2518</td><td>0.2549</td><td>0.2539</td><td>0.252</td><td>+0.246</td><td>0.093</td></tr>
+<tr><td>steering fidelity</td><td>0.7405</td><td>0.7142</td><td>0.6793</td><td>0.6541</td><td>0.6154</td><td>-0.845</td><td>0.0002</td></tr>
+<tr><td>steering amplitude (Hz)</td><td>424.3</td><td>423</td><td>425.5</td><td>422.4</td><td>431.3</td><td>+0.119</td><td>0.41</td></tr>
+<tr><td>descending rate (Hz)</td><td>1930</td><td>1976</td><td>2009</td><td>2041</td><td>2076</td><td>+0.958</td><td>0.0002</td></tr>
+<tr><td>population tau (ms)</td><td>150.3</td><td>104.3</td><td>117.6</td><td>116.5</td><td>131</td><td>-0.076</td><td>0.6</td></tr>
+<tr><td>dim. (PR)</td><td>52.83</td><td>55.12</td><td>54.54</td><td>57.99</td><td>59.86</td><td>+0.503</td><td>0.0005</td></tr>
+<tr><td>bump R</td><td>0.3585</td><td>0.3278</td><td>0.3036</td><td>0.2765</td><td>0.2742</td><td>-0.817</td><td>0.0002</td></tr>
+<tr><td>ring circularity</td><td>0.1687</td><td>0.1553</td><td>0.1313</td><td>0.14</td><td>0.112</td><td>-0.444</td><td>0.0007</td></tr>
+<tr><td>ring PC1-2 var</td><td>0.4357</td><td>0.4408</td><td>0.4275</td><td>0.4231</td><td>0.3995</td><td>-0.363</td><td>0.0085</td></tr>
+<tr><td>fluctuation SD (Hz)</td><td>0.7568</td><td>0.7748</td><td>0.8029</td><td>0.828</td><td>0.8419</td><td>+0.698</td><td>0.0002</td></tr>
+<tr><td>delivered events</td><td>6.552e+05</td><td>6.555e+05</td><td>6.556e+05</td><td>6.554e+05</td><td>6.558e+05</td><td>+0.134</td><td>0.36</td></tr>
+<tr><td>patch/surround</td><td>0.4257</td><td>0.5143</td><td>0.636</td><td>0.7619</td><td>0.8918</td><td>+0.980</td><td>0.0002</td></tr>
+</table>
+
+<hr>
+
+<h2>Supplementary materials</h2>
+
+<p>- <b>fig. S1</b> Patch-size dose鈥搑esponse and positive controls (<code>paper/figures/supp1.pdf</code>).</p>
+<p>- <b>fig. S2</b> Equivalence bounds for the slip-free patch, 90% CI against |d| &lt; 0.5 (<code>paper/figures/supp2.pdf</code>).</p>
+<p>- <b>fig. S3</b> Bayes-factor design ceiling against trials per arm (<code>paper/figures/supp3.pdf</code>).</p>
+<p>- <b>fig. S4</b> The drive-matching trap: the same contrasts unbalanced and balanced (<code>paper/figures/supp4.pdf</code>).</p>
+<p>- <b>table S1</b> Per-arm descriptive statistics (mean, sd, sem, 95% CI, median, IQR) 鈥?<code>A3-flow-compare.csv</code>, <code>B3-heading-compare.csv</code>.</p>
+<p>- <b>table S2</b> All pairwise contrasts (diff, CI, ratio, d, Welch t/df/P, Holm, Mann鈥揥hitney, rank-biserial, permutation P).</p>
+<p>- <b>table S3</b> Manipulation check per arm (patch cells, silenced CX synapses, silenced ring synapses, delivered events, ratio to self, expected).</p>
+<p>- <b>table S4</b> Dose鈥搑esponse summaries and trend tests (patch size; conflict 伪 at three gains).</p>
+<p>- <b>table S5</b> Propagation checks (hop counts; evoked volley at three gains).</p>
+<p>- <b>data S1</b> <code>flymind.brain</code> (FLYMIND4) and the raw per-trial CSVs.</p>
+<p>- <b>eq. S1</b> Per-step balancing derivation.</p>
+<p>- <b>note S1</b> Provenance of every value (data files, SHA256, commands, software versions).</p>
+<p>- <b>note S2</b> AI-assisted-tool disclosure: tool name, version, and the full prompt log for the AI-generated text (per journal policy; see Methods, <i>Use of generative AI</i>, and Acknowledgments).</p>
+<p>- <b>note S3</b> Circuit schematic regenerated from the blob (populations, connectivity matrix, strongest pathways, heading-pathway audit) and the whole-connectome probe of the heading pathway 鈥?archived figures <code>fig1</code>鈥揱fig7<code>, </code>figS1<code>, </code>figS3<code> in </code>paper/figures/`.</p></body></html>
