@@ -1,0 +1,84 @@
+<html><head><meta charset='utf-8'><style>
+body { font-family: "Times New Roman", serif; font-size: 12pt; line-height: 2.0; }
+h1 { font-size: 14pt; } h2 { font-size: 13pt; } h3 { font-size: 12pt; font-style: italic; }
+table { border-collapse: collapse; font-size: 9pt; line-height: 1.2; }
+td, th { border: 1px solid #444; padding: 2px 4px; }
+blockquote { font-size: 10pt; line-height: 1.3; color: #333; }
+code { font-family: "Courier New", monospace; font-size: 10pt; }
+</style></head><body><h1>Submission plan: <i>Science</i> first, then a cascade</h1>
+
+<p>**One rule governs everything below: these journals do not consider a manuscript that is under</p>
+<p>consideration elsewhere.**  Submitting to many journals at once is not a faster route — it is the</p>
+<p>one thing that gets a paper administratively rejected (and, at <i>Science</i>, can bar the authors).  The</p>
+<p>compliant way to "submit widely" is a <b>cascade</b>: submit to one, and the moment it is declined,</p>
+<p>send the same paper to the next, with the venue-specific adaptations already prepared here.</p>
+
+<p>Preprint servers (bioRxiv) are the exception: posting a preprint before or during submission is</p>
+<p>allowed by <i>Science</i>, Nature Portfolio, eLife, PLoS and Cell Press, and it does not count as</p>
+<p>prior publication.  That is the legitimate way to have the work publicly visible while the cascade</p>
+<p>runs.</p>
+
+<h2>Target 1 — <i>Science</i> (Research Article or Report)</h2>
+
+<table>
+<tr><th>item</th><th>what it needs</th><th>status</th></tr>
+<tr><td>Cover letter</td><td><code>paper/cover-letter.md</code> — already addressed to the Editors of <i>Science</i></td><td>✅ ready</td></tr>
+<tr><td>Format</td><td>Research Article ~15,000 words / 4-6 display items, or Report ~2,500 words / 4 display items</td><td>✅ the manuscript fits; <code>main4</code> + <code>main4b</code> can merge for a 4-figure Report</td></tr>
+<tr><td>Reporting Summary</td><td><code>paper/reporting-summary.md</code> — every item answered</td><td>✅ ready</td></tr>
+<tr><td>AI disclosure</td><td>Methods + Acknowledgments + cover letter + Supplementary Note S2 with the prompt log</td><td>✅ in place (option A, <code>paper/DECISIONS.md</code>)</td></tr>
+<tr><td>Data/code</td><td>DataSeer audits the repository: public, with README, one-command reproduction, per-trial data</td><td>✅ published at https://github.com/iice662/flymind-selfview</td></tr>
+<tr><td>Author fields</td><td>authors, affiliation, correspondence, funding, competing interests, contributions</td><td>✅ filled</td></tr>
+<tr><td><b>Only open item</b></td><td>the two verbatim prompts in <code>paper/supplementary-note-S2.md</code> (S2.3.1, S2.4.3)</td><td>⬜ author</td></tr>
+<tr><td>Suggested reviewers</td><td>three names: one CX/heading physiologist, one connectome-constrained modeller, one on equivalence/Bayes methods</td><td>⬜ author</td></tr>
+</table>
+
+<p><b>If <i>Science</i> declines</b> (likely at the editor's desk, since the paper is a model study), the</p>
+<p>rejection is usually fast (days to ~2 weeks) and does not prejudice the next venue.</p>
+
+<h2>Target 2 — <i>Nature Communications</i></h2>
+
+<p>Adaptations: <b>Reporting Summary</b> (Nature's own form; <code>paper/reporting-summary.md</code> covers the</p>
+<p>content), ORCID for the corresponding author, a <i>Data availability</i> statement naming the repository</p>
+<p>and a <i>Code availability</i> statement, and the manuscript split so the Methods come after the</p>
+<p>discussion.  Figures stay at 4-6 main.  Transfer service: if <i>Science</i> declines, Nature's</p>
+<p>manuscript-transfer service can move the file to <i>Nature Communications</i> with the referee reports</p>
+<p>intact, which is the fastest legitimate path.</p>
+
+<h2>Target 3 — <i>eLife</i></h2>
+
+<p>Adaptations: eLife's model is "reviewed preprint" — the paper is posted as a preprint and reviewed</p>
+<p>publicly; no reformatting is needed beyond a short <i>eLife</i> summary paragraph.  This venue is the</p>
+<p>best fit for the paper's methodological half (the drive-matching and body-lock traps) and it is</p>
+<p>where the equivalence-testing argument will be appreciated most.</p>
+
+<h2>Target 4 — <i>PLoS Computational Biology</i></h2>
+
+<p>Adaptations: PLOS's own submission checklist (similar to the reporting summary), a *Data</p>
+<p>Availability* statement with the repository URL, and author contributions in CRediT taxonomy</p>
+<p>(already drafted in the Acknowledgments).  The journal explicitly welcomes negative and</p>
+<p>methodological results, which is what half of this paper is.</p>
+
+<h2>Target 5 — <i>PNAS</i> (Direct Submission) or <i>Current Biology</i></h2>
+
+<p><i>PNAS</i> needs an NAS member sponsor for Direct Submission (or a Contributed submission through a</p>
+<p>member); <i>Current Biology</i> is a good fit for the <i>Report</i> format if the closed-loop behaviour</p>
+<p>result lands.  Both would need the paper cut to ~4 display items.</p>
+
+<h2>What is already true for every venue (no rework needed)</h2>
+
+<p>- the repository and its bundle are public, citable and complete;</p>
+<p>- every number in the manuscript is regenerated from the deposited per-trial CSVs and checked by</p>
+<p>  <code>tools/verify_headline_numbers.py</code> (25/25);</p>
+<p>- the AI disclosure follows the strictest of the five policies (<i>Science</i>'s), so it satisfies the</p>
+<p>  others by construction;</p>
+<p>- the figures are already single-column 3.5 in / double-column 7.0 in at 300 dpi with embedded</p>
+<p>  TrueType fonts, which every one of these venues accepts.</p>
+
+<h2>The real bottleneck is not the venue list</h2>
+
+<p>Four scientific items are still open (see <code>results/RECEPTIVE-FIELD-STATUS.md</code> and</p>
+<p><code>results/CLOSED-LOOP-PLAN.md</code>): the receptive-field patch experiment (<code>N-rfpatch</code>), the closed-loop</p>
+<p>gain calibration and dose series, the DictionaryBatch decoding that would name the neuropils, and</p>
+<p>the final consistency sweep.  The first two materially strengthen the paper at <i>any</i> of the five</p>
+<p>venues — the receptive-field patch answers the strongest reviewer objection, and the closed loop</p>
+<p>turns the steering-command result into a behavioural one.</p></body></html>
