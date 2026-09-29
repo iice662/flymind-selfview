@@ -1,0 +1,70 @@
+<html><head><meta charset='utf-8'><style>
+body { font-family: "Times New Roman", serif; font-size: 12pt; line-height: 2.0; }
+h1 { font-size: 14pt; } h2 { font-size: 13pt; } h3 { font-size: 12pt; font-style: italic; }
+table { border-collapse: collapse; font-size: 9pt; line-height: 1.2; }
+td, th { border: 1px solid #444; padding: 2px 4px; }
+blockquote { font-size: 10pt; line-height: 1.3; color: #333; }
+code { font-family: "Courier New", monospace; font-size: 10pt; }
+</style></head><body><h1>Science Reporting Summary — item-by-item answers</h1>
+
+<p>Fill the journal's online form from this sheet. Values are from <code>paper/tables.md</code> (generated) and</p>
+<p><code>results/CORRECTION.md</code> (the corrected experiment). Anything marked <b>[you]</b> is author-side.</p>
+
+<h2>Study design</h2>
+
+<table>
+<tr><th>item</th><th>answer</th></tr>
+<tr><td>Study type</td><td>Computational experiment on a connectome-constrained spiking model. No animals, no human participants, no clinical data.</td></tr>
+<tr><td>Unit of analysis</td><td>One simulated trial (independent stimulus stream and injection draws).</td></tr>
+<tr><td>n per group</td><td>10 trials per arm (I2-heading, M2-dose, A4-flow, D2-controls); 20 per arm in the replication (J2-n20); 6 per level at the two extra gains (K2-k150, L2-k600).</td></tr>
+<tr><td>Randomisation</td><td>Arm order is fixed by design; every arm draws its injections from its own <code>Random</code> stream, and all arms in a trial share one stimulus stream (<code>Random(90000 + trial)</code>), so the stimulus is bit-identical across arms.</td></tr>
+<tr><td>Blinding</td><td>Not applicable — no subjective measurement. Every readout is computed by code from spike counts.</td></tr>
+<tr><td>Inclusion / exclusion</td><td>No trials excluded. <code>n_excluded_nonfinite</code> is reported per metric in <code>results/raw/*-compare.csv</code> (0 for every reported metric).</td></tr>
+<tr><td>Replication</td><td>Internal: the whole experiment was re-run after the circuit was rebuilt (see <code>results/CORRECTION.md</code>), and the conflict dose was replicated at κ = 150 and κ = 600.</td></tr>
+<tr><td>Sample-size justification</td><td>The Bayes-factor ceiling of the design is set by n, not by the analysis: BF₀₁(t = 0) = 2.52 at n = 10 and 3.24 at n = 20 (<code>tools/make_main_figures.py: supp3</code>). n = 20 was chosen to cross BF = 3 for the primary readouts.</td></tr>
+</table>
+
+<h2>Data and materials</h2>
+
+<table>
+<tr><th>item</th><th>answer</th></tr>
+<tr><td>Source data</td><td>MaleCNS v1.0 flat connectome (Google × Janelia / FlyWire Consortium; male CNS, brain + VNC). Exact files, byte counts and SHA256 in <code>paper/supplementary-note-S1.md</code> §S1.1.</td></tr>
+<tr><td>Derived data</td><td><code>flymind.brain</code> (FLYMIND4), SHA256 <code>FC6B544C68B4C9997987E2BAA788A41ED8E4E91B3B5C60EBC1166947447827AB</code>; reconstruction command in <code>reproduce.ps1 -Tier source</code>.</td></tr>
+<tr><td>New reagents</td><td>None. This is a computational study.</td></tr>
+<tr><td>Materials availability</td><td>Not applicable.</td></tr>
+</table>
+
+<h2>Statistics</h2>
+
+<table>
+<tr><th>item</th><th>answer</th></tr>
+<tr><td>Tests</td><td>Welch t with 95% CI; Cohen's d with Hedges–Olkin CI; Mann–Whitney U with tie correction and rank-biserial correlation; permutation tests (4,000 relabellings, seed 12345); Holm–Bonferroni within each metric's self-vs-control family.</td></tr>
+<tr><td>Equivalence</td><td>TOST at two pre-specified bounds: standardised (\</td><td>d\</td><td>&lt; 0.5) and relative (±10% of the control mean), with 90% CIs.</td></tr>
+<tr><td>Bayes factors</td><td>JZS two-sample, Cauchy prior scale r = 0.707; validated against the analytic anchor BF₀₁(t = 0, n = 10/arm) = 2.52 (<code>python tools/compare_trials.py --selftest</code>).</td></tr>
+<tr><td>Multiplicity</td><td>Reported per contrast as raw P plus Holm-corrected P, and read against Bayes factors; no metric is claimed on corrected P alone.</td></tr>
+<tr><td>Error bars in figures</td><td>Mean ± 95% CI everywhere; individual trial values are overlaid as points.</td></tr>
+<tr><td>Analysis software</td><td>Python 3.14.7 (standard library + numpy/matplotlib for figures), .NET 8.0.404 for the simulator. No statistical package is used: every test is implemented in <code>tools/compare_trials.py</code>.</td></tr>
+</table>
+
+<h2>Reproducibility</h2>
+
+<table>
+<tr><th>item</th><th>answer</th></tr>
+<tr><td>One-command reproduction</td><td>`pwsh -File reproduce.ps1 -Tier sims\</td><td>stats\</td><td>figures`</td></tr>
+<tr><td>Blob check</td><td><code>python tools\verify_headline_numbers.py</code> — 25 checks, all passing against the deposited CSVs</td></tr>
+<tr><td>Environment</td><td>Windows, .NET 8.0.404, Python 3.14.7; software versions in <code>results/PROVENANCE.md</code></td></tr>
+<tr><td>Compute</td><td>One workstation, single-threaded simulator, 0.81× real time; the full family set is ~25 min wall-clock with 8 processes in parallel</td></tr>
+</table>
+
+<h2>Data, code and AI</h2>
+
+<table>
+<tr><th>item</th><th>answer</th></tr>
+<tr><td>Data availability</td><td>Repository URL: <b>[you — fill after pushing]</b>; the blob, every raw per-trial CSV and every stdout log are included. The 3 GB edge list and the 1 GB source feathers are <i>not</i> redistributed; they are rebuilt from the released MaleCNS v1.0 files by <code>tools/export_edges.py</code> (see <code>paper/supplementary-note-S1.md</code>).</td></tr>
+<tr><td>Code availability</td><td>Same repository; MIT for code, CC BY 4.0 for data and figures (see <code>LICENSE</code>).</td></tr>
+<tr><td>Generative AI — text</td><td>Disclosed: Methods (<i>Use of generative AI</i>), Acknowledgments, cover letter, and the full prompt log in Supplementary Note S2.</td></tr>
+<tr><td>Generative AI — images</td><td>None. Every figure is a programmatic plot of the authors' own numerical output (matplotlib scripts in <code>tools/</code>); no AI image tool was used.</td></tr>
+<tr><td>Generative AI — code</td><td>The model, analysis and figure code was written with a large language model under author direction; all of it was executed and its output verified by the authors (Note S2).</td></tr>
+<tr><td>Dual use / biosafety</td><td>None.</td></tr>
+<tr><td>Third-party material</td><td>None; no previously published figure or image is reproduced.</td></tr>
+</table></body></html>
